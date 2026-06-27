@@ -244,7 +244,7 @@ const PaymentPage = () => {
 
         // 2. Load Cashfree SDK and open checkout
         const Cashfree = await loadCashfreeSDK();
-        const cashfree = Cashfree({ mode: "sandbox" }); // change to "production" for live
+        const cashfree = Cashfree({ mode: "production" }); // change to "production" for live
 
         cashfree
           .checkout({

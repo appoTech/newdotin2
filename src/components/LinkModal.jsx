@@ -161,7 +161,7 @@ const LinkModal = ({ isOpen, onClose, link, originalUrl, type, onClickAway }) =>
       };
 
       const CashfreeInstance = await loadCashfreeSDK();
-      const cashfree = CashfreeInstance({ mode: "sandbox" });
+      const cashfree = CashfreeInstance({ mode: "production" });
 
       console.log(orderData.payment_session_id);
 

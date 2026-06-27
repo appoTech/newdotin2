@@ -530,7 +530,7 @@ class HeroSection extends Component {
       };
 
       const CashfreeInstance = await loadCashfreeSDK();
-      const cashfree = CashfreeInstance({ mode: "sandbox" });
+      const cashfree = CashfreeInstance({ mode: "production" });
 
       cashfree.checkout({
         paymentSessionId: orderData.payment_session_id,
@@ -659,7 +659,7 @@ class HeroSection extends Component {
       };
 
       const Cashfree = await loadCashfreeSDK();
-      const cashfree = Cashfree({ mode: "sandbox" });
+      const cashfree = Cashfree({ mode: "production" });
 
       cashfree
         .checkout({
