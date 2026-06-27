@@ -259,7 +259,7 @@ const Splash = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showGenerateLink, setShowGenerateLink] = useState(false);
   const [shareTrayOpen, setShareTrayOpen] = useState(false);
-  const [theme, setTheme] = useState("night");
+  const [theme, setTheme] = useState("morning");
   const [Mute, setMute] = useState(0);
   const [showAttendanceButton, setShowAttendanceButton] = useState(false);
   const [createOptionsModalOpen, setcreateOptionsModalOpen] = useState(false);
@@ -915,7 +915,8 @@ const Splash = () => {
         )}
       </nav>
       {/* THEME ICON BAR (FIXED) */}
-      <div
+      {/* Theme toggle button has been commented out to keep single morning theme */}
+      {/* <div
         className="
         fixed top-1/2 left-4 
         -translate-y-1/2 
@@ -950,7 +951,7 @@ const Splash = () => {
           {theme === "evening" && <Sunset size={22} />}
           {theme === "night" && <Moon size={22} />}
         </button>
-      </div>
+      </div> */}
 
       <div className="items-center justify-center w-full">
         <div className="flex flex-col items-center px-2">

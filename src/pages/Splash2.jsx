@@ -308,7 +308,7 @@ const Splash = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showGenerateLink, setShowGenerateLink] = useState(false);
   const [shareTrayOpen, setShareTrayOpen] = useState(false);
-  const [theme, setTheme] = useState("night");
+  const [theme, setTheme] = useState("morning");
   const [Mute, setMute] = useState(0);
   const [showAttendanceButton, setShowAttendanceButton] = useState(false);
   const [createOptionsModalOpen, setcreateOptionsModalOpen] = useState(false);
@@ -372,19 +372,20 @@ const Splash = () => {
   const history = useHistory();
   const location = useLocation();
 
-  useEffect(() => {
-  const themeCycle = ["morning", "evening", "night"];
-
-  const timers = themeCycle.map((themeName, index) =>
-    setTimeout(() => {
-      setTheme(themeName);
-    }, (index + 1) * 2000)
-  );
-
-  return () => {
-    timers.forEach(clearTimeout);
-  };
-}, []);
+  // Theme cycling has been removed to keep single morning theme
+  // useEffect(() => {
+  //   const themeCycle = ["morning", "evening", "night"];
+  // 
+  //   const timers = themeCycle.map((themeName, index) =>
+  //     setTimeout(() => {
+  //       setTheme(themeName);
+  //     }, (index + 1) * 2000)
+  //   );
+  // 
+  //   return () => {
+  //     timers.forEach(clearTimeout);
+  //   };
+  // }, []);
 
 useEffect(() => {
   const interval = setInterval(() => {
@@ -1024,7 +1025,7 @@ useEffect(() => {
         )}
       </nav>
       {/* THEME ICON BAR (FIXED) */}
-      <div
+      {/* <div
         className="
     fixed top-1/2 left-4 
     -translate-y-1/2 
@@ -1051,7 +1052,7 @@ useEffect(() => {
           {theme === "evening" && <Sunset size={22} />}
           {theme === "night" && <Moon size={22} />}
         </button>
-      </div>
+      </div> */}
 
       <div className="items-center justify-center w-full">
         <div className="flex flex-col items-center px-2">
@@ -1349,7 +1350,7 @@ useEffect(() => {
               </h2>}
               {!isOn && 
                 <button onClick={() => openPopup(state, "promote")} 
-                className="text-xl sm:text-2xl mt-3 font-semibold bg-transparent text-yellow-300/90 p-2 shadow-lg rounded-lg border-2 border-yellow-600 hover:border-yellow-300 hover:text-yellow-300"> 
+                className="text-xl sm:text-2xl mt-3 font-semibold bg-transparent text-yellow-600/90 p-2 shadow-lg rounded-lg border-2 border-yellow-600 hover:border-yellow-300 hover:text-yellow-300"> 
                 Spawnser the fleet 🌟 - 
                   <span className="ml-1 px-2 py-1 rounded-lg">$1000</span> 
                 </button>

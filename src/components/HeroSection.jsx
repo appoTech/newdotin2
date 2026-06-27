@@ -1201,7 +1201,7 @@ class HeroSection extends Component {
                           value={this.state.value}
                           onChange={this.handleChange}
                         />
-                        <div className="input-group-append flex">
+                        <div className="input-group-append flex gap-1">
                           <button
                             className="btn btn-secondary"
                             type="button"
@@ -1237,20 +1237,20 @@ class HeroSection extends Component {
                         </div>
                       </div>
 
-                      <div className="mt-3 flex flex-col sm:flex-row gap-3 w-full">
+                      <div className="mt-3 flex flex-col sm:flex-row gap-1 w-full">
                         <Button
                           className={classes.btnSignUp}
                           variant="primary"
                           type="submit"
-                          style={{ height: "48px", flex: 1 }}
+                          style={{ height: "55px", flex: 1 }}
                         >
                           Smarten Link
                         </Button>
                         <Button
-                          className="btn btn-secondary rounded-lg font-bold flex items-center justify-center"
+                          className="rounded-lg font-bold flex items-center justify-center"
                           type="button"
                           onClick={this.handleOpenHeroPromoteModal}
-                          style={{ height: "48px", flex: 1 }}
+                          style={{ height: "55px", flex: 1 }}
                         >
                           Promote 4 Links (₹50)
                         </Button>
