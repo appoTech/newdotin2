@@ -161,7 +161,7 @@ const LinkModal = ({ isOpen, onClose, link, originalUrl, type, onClickAway }) =>
       };
 
       const CashfreeInstance = await loadCashfreeSDK();
-      const cashfree = CashfreeInstance({ mode: "production" });
+      const cashfree = CashfreeInstance({ mode: "sandbox" });
 
       console.log(orderData.payment_session_id);
 
@@ -315,12 +315,12 @@ const LinkModal = ({ isOpen, onClose, link, originalUrl, type, onClickAway }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="z-10">
-      <ToastContainer style={{ zIndex: 9999 }} />
+    <div className="relative z-[99999]">
+      <ToastContainer style={{ zIndex: 100000 }} />
       {loading && <LoadingScreen isLoading={loading} />}
 
       <div
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[99999]"
         onClick={() => {
           if (!Story) (onClickAway || onClose)();
         }}

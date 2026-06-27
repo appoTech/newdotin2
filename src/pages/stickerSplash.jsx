@@ -1037,7 +1037,7 @@ const Splash = () => {
             />
 
             {/* PREMIUM 2x2 MATRIX */}
-<div className="relative w-full flex justify-center">
+<div className="relative w-full flex justify-center mt-4">
   <div className="grid grid-cols-2 gap-4 sm w-fit">
     {promotedLinksWithMeta.slice(0, 4).map((pLink, idx) => (
       <a

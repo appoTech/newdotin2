@@ -1,3 +1,4 @@
+import React, { Component } from "react";
 import classes from "./Styles.module.css";
 import axios from "axios";
 import {
@@ -5,13 +6,23 @@ import {
   generateUserLink,
   checkIfUserExist,
 } from "../helper/api";
-import { Nav, Navbar, Container, Form } from "react-bootstrap";
-/* import Header from "./Header";
-import Login from "../components/login";
-import Logout from "../components/logout"; */
+import { Nav, Navbar, Container, Form, Row, Col, Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
-import { Component } from "react";
-import { FaPaste, FaCircleNotch, FaTimesCircle } from "react-icons/fa";
+import {
+  FaPaste,
+  FaCircleNotch,
+  FaTimesCircle,
+  FaYoutube,
+  FaInstagram,
+  FaSpotify,
+  FaTwitter,
+  FaTelegram,
+  FaLinkedin,
+  FaGooglePlay,
+  FaGlobe,
+  FaLink,
+  FaCopy,
+} from "react-icons/fa";
 import { get_Tag } from "../helper/helperfn";
 import Modal from "react-awesome-modal";
 import {
@@ -20,10 +31,11 @@ import {
   validateCaptcha,
 } from "react-simple-captcha";
 import "../css/profile.css";
-// import logo from "../assets/logo.avif";
+import InApp from "detect-inapp";
+import logo from "../assets/logo.avif";
+import helmet from "../assets/helmet.avif";
 import slogo from "../assets/slogo.png";
 import appopenerLogo from "../assets/logo.avif";
-import appodisco from "../assets/appo-disco.png";
 import creatorcosmosLogo from "../assets/creator-cosmos.png";
 import superprofileLogo from "../assets/Appzero.png";
 import spawnserLogo from "../assets/Spawnsers.png";
@@ -34,8 +46,9 @@ import IndianAi from "../assets/indian-ai.png";
 import LinkModal from "./LinkModal";
 import SpaceBackground from "./spaceComponent";
 import PipIframe from "./PipFrame1";
-import TopNav from "./TopNav";
-import AttendanceButton from "./attendanceButton"
+import AttendanceButton from "./attendanceButton";
+import Login from "../components/login";
+import Logout from "../components/logout";
 
 const cleanPhone = (val) => {
   if (!val) return "";
@@ -47,62 +60,6 @@ const cleanPhone = (val) => {
   }
   return clean;
 };
-
-export function GlassBanner() {
-  return (
-    <div className="relative w-full flex justify-center pt-6 select-none">
-      <div className="relative" style={{ perspective: "1200px" }}>
-        <div className="pointer-events-none absolute -inset-8 -z-10 opacity-70">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-48 w-48 bg-fuchsia-500/40 blur-3xl" />
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 h-48 w-48 bg-cyan-400/40 blur-3xl" />
-          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 h-32 w-72 bg-indigo-500/30 blur-3xl" />
-        </div>
-
-        <div
-          className="relative backdrop-blur-md p-2"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(26,26,26,0.45) 0%, rgba(0,0,0,0.45) 100%)",
-            border: "1px solid rgba(255,255,255,0.15)",
-            boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -8px 24px rgba(0,0,0,0.55), 0 30px 60px -10px rgba(0,0,0,0.7)",
-            transform: "rotateX(6deg)",
-            clipPath:
-              "polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px))",
-          }}
-        >
-          <div
-            className="relative w-[320px] sm:w-[560px] h-[160px] sm:h-[280px] overflow-hidden bg-black/60"
-            style={{
-              clipPath:
-                "polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px))",
-            }}
-          >
-            <a
-            href="https://www.creatorcosmos.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="/banner.png"
-              alt="AppOpener banner"
-              className="w-full h-full object-cover"
-            />
-          </a>
-          </div>
-
-          <div
-            className="pointer-events-none absolute inset-x-4 top-0 h-6 opacity-50"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.4), transparent 90%)",
-            }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 class HeroSection extends Component {
   constructor(props) {
@@ -160,13 +117,11 @@ class HeroSection extends Component {
   getShortIdFromLink = (generatedLink) => {
     if (!generatedLink) return "";
     const urlParts = generatedLink.split("/");
-    return urlParts[urlParts.length - 1]; // Get the last part (shortId)
+    return urlParts[urlParts.length - 1];
   };
 
   componentDidMount() {
-    // this.getLoginDetails()
     window.addEventListener("resize", this.updateScreenWidth);
-    // this.detectTimeZone();
   }
 
   handleDomainChange = (e) => {
@@ -232,71 +187,42 @@ class HeroSection extends Component {
   }
 
   handleSubmit(event) {
-    /* console.log("Handle Submit Data:", {
-      url: this.state.value,
-      appName: this.state.appname,
-      isLogin: this.state.isLogin,
-      selectedDomain: this.state.selectedDomain
-    }); */
-    if (this.state.value == "") {
+    if (this.state.value === "") {
       this.setState({ errortext_url: "Please enter your link" });
-    } else if (this.state.appname == "" || this.state.appname == " ") {
+    } else if (this.state.appname === "" || this.state.appname === " ") {
       this.setState({ errortext_url: "Invalid Link" });
     } else {
       this.setState({ urlexist: true, errortext_url: "" });
       if (this.state.isLogin) {
-        //user is loginned then no captcha
-        this.openModal();
+        // user is logged in -> show type modal directly
+        this.setState({ showTypeModal: true });
       } else {
+        // user is not logged in -> show captcha modal
         this.openCaptchaModal();
       }
     }
-
-    //alert('A name was submitted: ' + this.state.value);
     event.preventDefault();
   }
 
   openModal() {
     this.setState({ visible: true, loadingicon: true });
 
-    //check if same link is clicked again & again
+    let appopener_app_url = "https://appopener" + this.state.selectedDomain + "/";
 
-    let appopener_app_url =
-      "https://appopener" + this.state.selectedDomain + "/";
-
-    // if (this.state.value === this.state.old_original_url) {
-    //   console.log("Same link detected — skipping API call");
-    //   this.setState({
-    //     visible: true, // still show modal
-    //     loadingicon: false, // no spinner
-    //     generatedlink: this.state.generatedlink,
-    //   });
-    //   return;
-    // }
-
-    /*  console.log(appopener_app_url); */
-    // if (this.state.value === this.state.old_original_url) {
-    //   this.setState({
-    //     loadingicon: false,
-    //     generatedlink: this.state.generatedlink,
-    //   });
-    // } else {
-    //check if user is login or not
     if (this.state.isLogin) {
       this.setState({ generatedlink: "", copied: false });
-      //check first whether to create new user account or not
       checkIfUserExist(
         this.state.displayname,
         this.state.displayemail,
         this.state.googleuserID,
-        this.state.GoogleAuthToken 
-      ); 
+        this.state.GoogleAuthToken
+      );
 
       generateUserLink(
         this.state.appname,
         this.state.value,
-        this.state.GoogleAuthToken, 
-        this.state.paymentPhone || null, 
+        this.state.GoogleAuthToken,
+        this.state.paymentPhone || null,
         this.state.type !== "link" ? this.state.type : null
       ).then((res) => {
         /* console.log("generateUserLink Request Data:", {
@@ -307,14 +233,12 @@ class HeroSection extends Component {
         //console.log("status");
         console.log("generateUserLink Response:", res);
 
-        //console.log(res.status);
-        if (res.status == 401) {
+        if (res.status === 401) {
           alert("Invalid Token Please try again");
           window.location.reload();
           return;
         }
         let tag = res.data.tag.toLowerCase();
-        //console.log(tag);
         let original_url = res.data.originalURL;
         if (tag === "youtube") {
           // const videoIdIdx = original_url.search("v=")
@@ -350,20 +274,13 @@ class HeroSection extends Component {
         } else if (tag === "facebook") {
           tag = "fb";
         }
-        // } else {
-        //   tag = "web";
-        // }
         let generated_url = "";
-        console.log(this.state.type, res.data.shortid);
         if (this.state.type === "app") {
-          generated_url =
-            "https://appopener.com/" + tag + "/" + res.data.shortid;
+          generated_url = "https://appopener.com/" + tag + "/" + res.data.shortid;
         } else if (this.state.type === "ad-free") {
-          generated_url =
-            "https://appopener.net/free/" + tag + "/" + res.data.shortid;
+          generated_url = "https://appopener.net/free/" + tag + "/" + res.data.shortid;
         } else {
-          generated_url =
-            "https://appopener.in/" + tag + "/" + res.data.shortid;
+          generated_url = "https://appopener.in/" + tag + "/" + res.data.shortid;
         }
         this.setState({
           loadingicon: false,
@@ -384,88 +301,47 @@ class HeroSection extends Component {
             originalUrl: this.state.value,
           });
           // console.log("result is : ", res.data);
-          let original_url = res.data.originalURL;
-          let tag = res.data.tag.toLowerCase();
-          console.log("generateOpenShortLink Response:", res);
-          if (tag === "youtube") {
-            // const videoIdIdx = original_url.search("v=")
-            // const containsAnd=original_url.search("&t");
-            // // console.log("containsAnd: ",containsAnd);
-            // let videoId="";
-            // if(containsAnd!==-1){
-            //   videoId=original_url.substring(videoIdIdx+2,containsAnd);
-            // }else{
-            //   videoId=original_url.substring(videoIdIdx+2)
-            // }
-
-            // if(localStorage.getItem('videoId')===null){
-            //   localStorage.setItem('videoId',videoId)
-            // }else{
-            //   localStorage.removeItem('videoId')
-            //   localStorage.setItem('videoId',videoId)
-            // }
-            // console.log("videoId", videoId);
-            // console.log("props of the video section are : ", this.props);
-            tag = "yt";
-          } else if (tag === "instagram") {
-            tag = "ig";
-          } else if (tag === "spotify") {
-            tag = "sp";
-          } else if (tag === "telegram") {
-            tag = "tg";
-          } else if (tag === "twitter") {
-            tag = "tw";
-          } else if (tag === "linkedin") {
-            tag = "lk";
-          } else if (tag === "playstore") {
-            tag = "ps";
-          } else if (tag === "docs") {
-            tag = "docs";
-          } else if (tag === "facebook") {
-            tag = "fb";
-          }
-          // else {
-          //   tag = "web";
-          // }
-          let generated_url = "";
-          console.log(this.state.type, res.data.shortid);
-          if (this.state.type === "app") {
-            generated_url =
-              "https://appopener.com/" + tag + "/" + res.data.shortid;
-          } else if (this.state.type === "ad-free") {
-            generated_url =
-              "https://appopener.net/free/" + tag + "/" + res.data.shortid;
-          } else {
-            generated_url =
-              "https://appopener.in/" + tag + "/" + res.data.shortid;
-          }
-          //this.setState({intentvalue : res.data.app_intend});
-          this.setState({
-            loadingicon: false,
-            old_original_url: original_url,
-            generatedlink: generated_url,
-          });
-          console.log("-----", this.state);
+        let original_url = res.data.originalURL;
+        let tag = res.data.tag.toLowerCase();
+        console.log("generateOpenShortLink Response:", res);
+        if (tag === "youtube") {
+          tag = "yt";
+        } else if (tag === "instagram") {
+          tag = "ig";
+        } else if (tag === "spotify") {
+          tag = "sp";
+        } else if (tag === "telegram") {
+          tag = "tg";
+        } else if (tag === "twitter") {
+          tag = "tw";
+        } else if (tag === "linkedin") {
+          tag = "lk";
+        } else if (tag === "playstore") {
+          tag = "ps";
+        } else if (tag === "docs") {
+          tag = "docs";
+        } else if (tag === "facebook") {
+          tag = "fb";
         }
-      );
+        let generated_url = "";
+        if (this.state.type === "app") {
+          generated_url = "https://appopener.com/" + tag + "/" + res.data.shortid;
+        } else if (this.state.type === "ad-free") {
+          generated_url = "https://appopener.net/free/" + tag + "/" + res.data.shortid;
+        } else {
+          generated_url = "https://appopener.in/" + tag + "/" + res.data.shortid;
+        }
+        this.setState({
+          loadingicon: false,
+          old_original_url: original_url,
+          generatedlink: generated_url,
+        });
+      });
     }
   }
 
-  //   detectTimeZone = () => {
-  //     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  //     if (
-  //         userTimeZone.includes('Asia/Kolkata') ||
-  //         userTimeZone.includes('Asia/Mumbai') ||
-  //         userTimeZone.includes('Asia/Calcutta')
-  //     ) {
-  //         this.setState({ selectedDomain: '.in' });
-  //     } else {
-  //         this.setState({ selectedDomain: '.com' });
-  //     }
-  // };
-
   async timeout(delay) {
-    return new Promise((res) => setTimeout(res, delay));
+    return new Promise((resolve) => setTimeout(resolve, delay));
   }
 
   async handlePaste(input) {
@@ -654,7 +530,7 @@ class HeroSection extends Component {
       };
 
       const CashfreeInstance = await loadCashfreeSDK();
-      const cashfree = CashfreeInstance({ mode: "production" });
+      const cashfree = CashfreeInstance({ mode: "sandbox" });
 
       cashfree.checkout({
         paymentSessionId: orderData.payment_session_id,
@@ -783,7 +659,7 @@ class HeroSection extends Component {
       };
 
       const Cashfree = await loadCashfreeSDK();
-      const cashfree = Cashfree({ mode: "production" });
+      const cashfree = Cashfree({ mode: "sandbox" });
 
       cashfree
         .checkout({
@@ -882,8 +758,12 @@ class HeroSection extends Component {
         return <Redirect to="/dashboard" />;
       }
     }
-    let modal_captcha = <div></div>;
 
+    const useragent = navigator.userAgent || navigator.vendor || window.opera;
+    const inapp = new InApp(useragent);
+
+    // 1. Captcha Modal
+    let modal_captcha = <div></div>;
     if (this.state.visible_captcha) {
       modal_captcha = (
         <Modal
@@ -895,24 +775,15 @@ class HeroSection extends Component {
           position="absolute"
           onClickAway={() => this.closeCaptchaModal()}
         >
-          <div
-            className="modal-content text-white relative bg-black"
-            style={{
-              border: "0",
-            }}
-          >
+          <div className="modal-content text-white relative bg-black border-0">
             <SpaceBackground />
-            <div className="modal-header text-center relative z-10 p-6">
-              <h5 className="modal-title">Verification for Added Security</h5>
-              <a
-                className="color-white"
-                href="javascript:void(0);"
-                onClick={() => this.closeCaptchaModal()}
-              >
-                <FaTimesCircle size="25px" />
+            <div className="modal-header text-center relative z-10 p-6 flex justify-between items-center">
+              <h5 className="modal-title font-bold">Verification for Added Security</h5>
+              <a href="javascript:void(0);" onClick={() => this.closeCaptchaModal()}>
+                <FaTimesCircle size="25px" color="white" />
               </a>
             </div>
-            <div className="modal-body">
+            <div className="modal-body relative z-10">
               <center>
                 <div>
                   {" "}
@@ -923,362 +794,111 @@ class HeroSection extends Component {
                   <input
                     placeholder="Enter Captcha Value"
                     id="user_captcha_input"
-                    className="form-control"
+                    className="form-control mt-2"
                     name="user_captcha_input"
                     type="text"
-                  ></input>
-                  <p className="text-danger">{this.state.errortext}</p>
-                  <button
-                    className="btn btn-primary font-semibold"
-                    type="button"
-                    onClick={this.verifyCaptcha}
-                  >
+                  />
+                  <p className="text-danger mt-1">{this.state.errortext}</p>
+                  <button className="btn btn-primary font-semibold mt-2" type="button" onClick={this.verifyCaptcha}>
                     Verify
-                    {this.state.loadingicon ? (
-                      <FaCircleNotch className={classes.spinner} />
-                    ) : (
-                      ""
-                    )}
+                    {this.state.loadingicon ? <FaCircleNotch className={classes.spinner} /> : ""}
                   </button>
                 </div>
-                <br></br>
-                <i className="font-semibold">To avoid Captcha Please Login..</i>
+                <br />
+                <i className="font-semibold text-gray-300">To avoid Captcha Please Login..</i>
               </center>
             </div>
           </div>
         </Modal>
       );
-    } else {
-      modal_captcha = <div></div>;
     }
     let showTypeModal1 = <div></div>;
     if (this.state.showTypeModal) {
       showTypeModal1 = (
         <Modal
-  visible={this.state.showTypeModal}
-  width="95%"
-  height="55%"
-  effect="fadeInDown"
-  onClickAway={() => this.closeTypeModal()}
-  style={{
-    zIndex: 99999,
-    position: "fixed",
-    maxWidth: "700px",
-    width: "95%",
-    maxHeight: "90vh",
-    overflowY: "auto",
-    borderRadius: "20px",
-    padding: "6px",
-  }}
->
-  <SpaceBackground />
+          visible={this.state.showTypeModal}
+          width="95%"
+          height="55%"
+          effect="fadeInDown"
+          onClickAway={() => this.closeTypeModal()}
+          style={{
+            zIndex: 99999,
+            position: "fixed",
+            maxWidth: "700px",
+            width: "95%",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            borderRadius: "20px",
+            padding: "6px",
+          }}
+        >
+          <SpaceBackground />
+          <div className="flex flex-row flex-wrap items-center justify-center gap-2 py-4 relative z-10">
+            {/* Card 1: Single Link */}
+            <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("link")}>
+              <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:-rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "link" ? "ring-4 ring-blue-500" : ""}`}>
+                <div className="absolute inset-0 flex items-center justify-center opacity-30">
+                  <img src={slogo} alt="" />
+                </div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
+                  <div className="text-4xl mb-1">🔗</div>
+                  <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">SINGLE LINK</h2>
+                  <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(for Stories)</p>
+                </div>
+                <div className="absolute top-2 left-2">
+                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
+                </div>
+                <div className="absolute bottom-2 right-2 rotate-180">
+                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
 
-  {/* CARD WRAPPER */}
-  <div
-    className="
-      flex flex-row
-      flex-wrap
-      items-center
-      justify-center
-      gap-2
-      py-4
-    "
-  >
-    {/* CARD 1 */}
-    <div
-      className="relative flex justify-center w-auto"
-      onClick={() => this.handleTypeSelect("link")}
-    >
-      <div
-        className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px]
-        rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)]
-        overflow-hidden select-none cursor-pointer transition-all duration-300
-        hover:-rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)]
-        ${
-          this.state.type === "link" ? "ring-4 ring-blue-500" : ""
-        }`}
-      >
-        Watermark logo
-        <div className="absolute inset-0 flex items-center justify-center opacity-30">
-          <img src={slogo} alt="" />
-        </div>
+            {/* Card 2: Boost App Link */}
+            <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("app")}>
+              <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "app" ? "ring-4 ring-green-500" : ""}`}>
+                <div className="absolute inset-0 flex items-center justify-center opacity-30">
+                  <img src={slogo} alt="" />
+                </div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
+                  <div className="text-4xl mb-1">📱</div>
+                  <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">Boost<br />-O-<br />Barter Box</h2>
+                  <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(for Bio)<br />($1)</p>
+                </div>
+                <div className="absolute top-2 left-2">
+                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
+                </div>
+                <div className="absolute bottom-2 right-2 rotate-180">
+                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
 
-        {/* Card inner text */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center">
-          <div className="text-4xl mb-1">🔗</div>
-
-          <h2 className="text-[16px] sm:text-[18px] font-bold text-gray-200 uppercase">
-            SINGLE LINK
-          </h2>
-
-          <p className="text-[13px] sm:text-[14px] text-gray-200 font-semibold mt-1">
-            (for Stories)
-          </p>
-        </div>
-
-        {/* Top-left value */}
-        <div className="absolute top-2 left-2">
-          <img src={appopenerLogo} alt="" className="w-6 h-6" />
-        </div>
-
-        {/* Bottom-right rotated value */}
-        <div className="absolute bottom-2 right-2 rotate-180">
-          <img src={appopenerLogo} alt="" className="w-6 h-6" />
-        </div>
-      </div>
-    </div>
-
-    {/* CARD 2 */}
-    <div
-      className="relative flex justify-center w-auto"
-      onClick={() => this.handleTypeSelect("app")}
-    >
-      <div
-        className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px]
-        rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)]
-        overflow-hidden select-none cursor-pointer transition-all duration-300
-        hover:rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)]
-        ${
-          this.state.type === "app" ? "ring-4 ring-green-500" : ""
-        }`}
-      >
-        {/* Watermark logo */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-30">
-          <img src={slogo} alt="" />
-        </div>
-
-        {/* Card inner content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center">
-          <div className="text-4xl mb-1">📱</div>
-
-          <h2 className="text-[16px] sm:text-[18px] font-bold text-gray-200 uppercase">
-            Boost
-            <br />
-            -O-
-            <br />
-            Barter Box 
-          </h2>
-
-          <p className="text-[13px] sm:text-[14px] text-gray-200 font-semibold mt-1">
-            (for Bio)
-            <br />
-            ($1)
-          </p>
-        </div>
-
-        {/* Top-left value */}
-        <div className="absolute top-2 left-2">
-          <img src={appopenerLogo} alt="" className="w-6 h-6" />
-        </div>
-
-        {/* Bottom-right rotated value */}
-        <div className="absolute bottom-2 right-2 rotate-180">
-          <img src={appopenerLogo} alt="" className="w-6 h-6" />
-        </div>
-      </div>
-    </div>
-
-    {/* CARD 3 */}
-    <div
-      className="relative flex justify-center w-auto"
-      onClick={() => this.handleTypeSelect("ad-free")}
-    >
-      <div
-        className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px]
-        rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)]
-        overflow-hidden select-none cursor-pointer transition-all duration-300
-        hover:rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)]
-        ${
-          this.state.type === "ad-free"
-            ? "ring-4 ring-yellow-500"
-            : ""
-        }`}
-      >
-        {/* Watermark logo */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-30">
-          <img src={slogo} alt="" />
-        </div>
-
-        {/* Card inner content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center">
-          <div className="text-4xl mb-1">⭐</div>
-
-          <h2 className="text-[16px] sm:text-[18px] font-bold text-gray-200 uppercase">
-            AD-FREE
-          </h2>
-
-          <p className="text-[13px] sm:text-[14px] text-gray-200 font-semibold mt-1">
-            (₹11)
-          </p>
-        </div>
-
-        {/* Top-left value */}
-        <div className="absolute top-2 left-2">
-          <img src={appopenerLogo} alt="" className="w-6 h-6" />
-        </div>
-
-        {/* Bottom-right rotated value */}
-        <div className="absolute bottom-2 right-2 rotate-180">
-          <img src={appopenerLogo} alt="" className="w-6 h-6" />
-        </div>
-      </div>
-    </div>
-  </div>
-</Modal>
+            {/* Card 3: Ad-Free Link */}
+            <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("ad-free")}>
+              <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "ad-free" ? "ring-4 ring-yellow-500" : ""}`}>
+                <div className="absolute inset-0 flex items-center justify-center opacity-30">
+                  <img src={slogo} alt="" />
+                </div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
+                  <div className="text-4xl mb-1">⭐</div>
+                  <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">AD-FREE</h2>
+                  <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(₹11)</p>
+                </div>
+                <div className="absolute top-2 left-2">
+                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
+                </div>
+                <div className="absolute bottom-2 right-2 rotate-180">
+                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
       );
     }
-    let modal_generatelink = <div></div>;
-    if (this.state.visible) {
-      modal_generatelink = (
-        <LinkModal
-          isOpen={this.state.visible}
-          onClose={() => this.closeModal()}
-          link={this.state.generatedlink}
-          originalUrl={this.state.old_original_url}
-          type={this.state.type || "link"}
-          onClickAway={() => this.closeModal()}
-        />
-        //         <Modal
-        //           style={{
-        //             position: "absolute",
-        //             display: "flex",
-        //             justifyContent: "center",
-        //             alignItems: "center",
-        //           }}
-        //           visible={this.state.visible}
-        //           width="auto"
-        //           maxwidth="90%"
-        //           height="auto"
-        //           maxHeight="80%"
-        //           effect="fadeInDown"
-        //           position="absolute"
-        //           onClickAway={() => this.closeModal()}
-        //         >
-        //           <div
-        //             className="modal-content"
-        //             style={{
-        //               border: "0",
-        //               borderRadius: "10px",
-        //               boxShadow: "0 4px 20px rgba(0, 0, 0, 0.2)",
-        //               overflow: "hidden",
-        //             }}
-        //           >
-        //             {/* Header */}
-        //             <div className="modal-header d-flex justify-content-between align-items-center px-4 py-3">
-        //               <h5 className="modal-title mb-0 flex items-center justify-center">Step 3. Share your Super Story</h5>
-        //               <a href="javascript:void(0);" onClick={() => this.closeModal()}>
-        //                 <FaTimesCircle size="22px" color="#000000" />
-        //               </a>
-        //             </div>
 
-        //             {/* Main Scrollable Body */}
-        //             <div
-        //               className="modal-body"
-        //               style={{
-        //                 padding: "1px",
-        //                 maxHeight: "65vh",
-        //                 overflowY: "auto",
-        //                 backgroundColor: "#f9f9fb",
-        //               }}
-        //             >
-
-        //             <EditLinkForm
-        //               originalURL={this.state.old_original_url}
-        //               shortId={this.getShortIdFromLink(this.state.generatedlink)}
-        //               onCancel={() => this.closeEditWindow()}
-        //               disabled={!this.state.editWindow}
-        //             />
-        //               {/* <InstaStory
-        //                 download={false}
-        //                 videoId="nQOescIkJns"
-        //                 headline="Check out our latest video!"
-        //                 /> */}
-        //               {/* Link Preview Section */}
-        //               <div className="mt-4">
-        //                 <div className="input-group shadow-sm">
-        //                   <span className="input-group-text bg-secondary text-white">
-        //                     <FaLink />
-        //                   </span>
-        //                   <input
-        //                     type="text"
-        //                     className="form-control"
-        //                     value={this.state.generatedlink}
-        //                     disabled={true}
-        //                   />
-        //                 </div>
-
-        //                 {/* Button actions */}
-        //                 <div className="d-flex flex-wrap gap-2 mt-3">
-        //                   {this.state.loadingicon ? (
-        //                     <button className="btn btn-primary px-4 py-2" disabled>
-        //                       <FaCircleNotch className={classes.spinner} /> Please wait
-        //                     </button>
-        //                   ) : (
-        //                     <div className="flex flex-col gap-2 w-full">
-        //                       <div className="flex gap-4 justify-between items-center">
-        //                       <CopyToClipboard
-        //                         text={this.state.generatedlink}
-        //                         onCopy={() => this.setState({ copied: true })}
-        //                       >
-        //                         <button className="btn btn-primary px-2 py-2">
-        //                           <FaCopy size="20px" /> Copy Link
-        //                         </button>
-        //                       </CopyToClipboard>
-        // {/*                       <button
-        //                         className="btn btn-secondary px-2 py-2"
-        //                         onClick={() => this.setState({ editWindow: true })}
-        //                       >
-        //                         <FaEdit size="20px" /> Edit Link
-        //                       </button> */}
-        //                       <a href={`/visualShop/${this.state.VideoId}`}>
-        //                       <button
-        //                         className="btn btn-secondary px-2 py-2"
-        //                       >
-        //                         <FaShoppingBag size="20px" /> Super Story
-        //                       </button>
-        //                       </a>
-        //                       </div>
-
-        //                     </div>
-        //                   )}
-        //                 </div>
-
-        //                 {this.state.copied && (
-        //                   <p className="text-success mt-2">Link copied to clipboard!</p>
-        //                 )}
-        //               </div>
-        //             </div>
-
-        //             {/* Footer */}
-        //             <div className="modal-footer px-4 py-3 bg-white text-black">
-        //               <p
-        //                 className="text-muted text-white mb-2"
-        //                 style={{ fontSize: "0.9rem" }}
-        //               >
-        //               </p>
-        //               {inapp.isMobile ? (
-        //                 <ShareButton
-        //                   className="mt-2"
-        //                   title="AppOpener Smartlink"
-        //                   url={this.state.generatedlink}
-        //                 />
-        //               ) : (
-        //                 <div className="d-flex justify-content-center mt-3 w-100">
-        //                   <ShareButtons
-        //                     title="AppOpener Smartlink"
-        //                     url={this.state.generatedlink}
-        //                     tags="#appopener"
-        //                   />
-        //                 </div>
-        //               )}
-        //             </div>
-        //           </div>
-        //         </Modal>
-      );
-    } else {
-      modal_generatelink = <div></div>;
-    }
-
+    // 3. Billing details payment modal
     let paymentFormModal = <div></div>;
     if (this.state.showPaymentFormModal) {
       paymentFormModal = (
@@ -1295,11 +915,8 @@ class HeroSection extends Component {
             <SpaceBackground />
             <div className="modal-header text-center relative z-10 flex justify-between items-center mb-4">
               <h5 className="modal-title font-bold text-xl">Payment Details</h5>
-              <a
-                className="color-white cursor-pointer ml-auto"
-                onClick={() => this.setState({ showPaymentFormModal: false })}
-              >
-                <FaTimesCircle size="25px" />
+              <a className="color-white cursor-pointer ml-auto" onClick={() => this.setState({ showPaymentFormModal: false })}>
+                <FaTimesCircle size="25px" color="white" />
               </a>
             </div>
             <div className="modal-body relative z-10">
@@ -1318,7 +935,6 @@ class HeroSection extends Component {
                   className="form-control px-3 py-2 rounded text-black"
                   value={this.state.paymentEmail}
                   onChange={(e) => this.setState({ paymentEmail: e.target.value })}
-                  // required
                 />
                 <input
                   type="tel"
@@ -1335,9 +951,7 @@ class HeroSection extends Component {
                   disabled={this.state.loadingicon}
                 >
                   Pay {this.state.pendingType === "app" ? "$1" : "₹11"}
-                  {this.state.loadingicon ? (
-                    <FaCircleNotch className={`${classes.spinner} ml-2`} />
-                  ) : null}
+                  {this.state.loadingicon ? <FaCircleNotch className={`${classes.spinner} ml-2`} /> : null}
                 </button>
               </form>
             </div>
@@ -1346,6 +960,7 @@ class HeroSection extends Component {
       );
     }
 
+    // 4. Hero promote package modal (4 links)
     let heroPromoteModal = <div></div>;
     if (this.state.showHeroPromoteModal) {
       heroPromoteModal = (
@@ -1368,7 +983,7 @@ class HeroSection extends Component {
         >
           <div className="modal-content text-white relative bg-[#0d0d1c] border-2 border-white/20 p-6 rounded-2xl max-h-[85vh] overflow-y-auto">
             <SpaceBackground />
-            
+
             <div className="relative z-10">
               <div className="flex justify-between items-center pb-3 border-b border-white/10 mb-4">
                 <h3 className="text-xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
@@ -1408,7 +1023,6 @@ class HeroSection extends Component {
 
                 <div className="border-t border-white/10 my-3 pt-3 flex flex-col gap-3">
                   <h4 className="text-sm font-bold text-gray-200">Billing Information</h4>
-                  
                   <div className="flex flex-col gap-1">
                     <label className="text-[10px] text-gray-400 uppercase tracking-wider">Full Name</label>
                     <input
@@ -1420,7 +1034,6 @@ class HeroSection extends Component {
                       required
                     />
                   </div>
-
                   <div className="flex flex-col gap-1">
                     <label className="text-[10px] text-gray-400 uppercase tracking-wider">Email Address</label>
                     <input
@@ -1432,7 +1045,6 @@ class HeroSection extends Component {
                       required
                     />
                   </div>
-
                   <div className="flex flex-col gap-1">
                     <label className="text-[10px] text-gray-400 uppercase tracking-wider">Phone Number</label>
                     <input
@@ -1468,560 +1080,310 @@ class HeroSection extends Component {
       );
     }
 
+    // 5. LinkModal output when visible is true
+    let modal_generatelink = <div></div>;
+    if (this.state.visible) {
+      modal_generatelink = (
+        <LinkModal
+          isOpen={this.state.visible}
+          onClose={() => this.closeModal()}
+          link={this.state.generatedlink}
+          originalUrl={this.state.old_original_url}
+          type={this.state.type || "link"}
+          onClickAway={() => this.closeModal()}
+        />
+      );
+    }
+
     return (
-      <div className="relative min-h-screen bg-transparent overflow-visible z-10 px-4 sm:px-6">
+      <>
+        <div className={classes.heroBanner}>
+          <div className={classes.overflowHidden}>
+            <div className={classes.topHeader}>
+              <div className="header">
+                <Navbar expand="lg" className="navbar-dark">
+                  <Container>
+                    <div className="d-flex justify-content-start align-items-center">
+                      <Navbar.Brand href="/" className="navbar-logo">
+                        <img className={classes.logo} src={logo} alt="Logo" />
+                      </Navbar.Brand>
+                      <a
+                        className="navbar-brand d-none d-lg-block"
+                        href="/"
+                        style={{
+                          fontFamily: "Montserrat Alternates",
+                          fontWeight: 600,
+                          fontSize: "23px",
+                          color: "white",
+                          textDecoration: "none",
+                        }}
+                      >
+                        APPOPENER
+                      </a>
+                    </div>
 
-<div className="relative pt-4 pb-2">
+                    <div className="d-flex justify-content-start">
+                      {this.state.isLogin ? (
+                        <Nav.Link
+                          href="/retrieve-links"
+                          style={{
+                            color: "white",
+                            fontFamily: "Montserrat Alternates",
+                            fontWeight: "800",
+                            fontSize: "16px",
+                          }}
+                        >
+                          Dashboard
+                        </Nav.Link>
+                      ) : (
+                        ""
+                      )}
+                    </div>
 
-  <div className="flex justify-center">
-    <img
-      className="w-30 sm:w-38 h-32 cursor-pointer"
-      src={appodisco}
-      alt="Logo"
-      onClick={() => this.setState({ showAttedance: true })}
-    />
-  </div>
-
-  <a
-    href="/retrieve-links"
-    className="absolute top-8 right-2 sm:right-4 flex items-center gap-2 rounded-lg py-2 px-4 bg-indigo-600 text-white font-semibold no-underline"
-  >
-    <span>Dashboard</span>
-    {/* <img src={slogo} alt="logo" className="w-7 h-7" /> */}
-  </a>
-
-</div>
-
-  <GlassBanner />
-
-  <div className="header">
-    <Navbar
-      expand="lg"
-      className={this.state.click ? classes.active : "navbar-dark"}
-    >
-      <Container>
-        {/* ✅ FIXED NAVBAR */}
-        <div className="flex items-center justify-between w-full px-2">
-          <div className="w-full flex flex-row no-underline items-center justify-center" />
-        </div>
-
-        <div className="d-flex justify-content-end">
-          <Nav>
-            <Form className={classes.logingoogle} style={{ width: "100%" }}>
-              <div className={classes.btnSignGrp}>
-                {this.state.isLogin ? <></> : <></>}
+                    <div className="d-flex justify-content-end">
+                      <Nav>
+                        <Form style={{ width: "100%" }}>
+                          <div className={classes.btnSignGrp}>
+                            {this.state.isLogin ? (
+                              <div className="container d-flex flex-row">
+                                <div className="top-container flex items-center gap-2">
+                                  <img
+                                    className="img-responsive img-fluid profile-image rounded-full"
+                                    src={this.state.displayImage}
+                                    width="40"
+                                    alt="profile"
+                                  />
+                                  <div className="flex flex-col">
+                                    <p className="name d-none d-lg-block text-white text-xs mb-0">
+                                      {this.state.displayemail}
+                                    </p>
+                                    <div className="mail mt-0.5">
+                                      <Logout />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <center>
+                                <Login sendData={this.getLoginDetails} />
+                              </center>
+                            )}
+                          </div>
+                        </Form>
+                      </Nav>
+                    </div>
+                  </Container>
+                </Navbar>
               </div>
-            </Form>
-          </Nav>
-        </div>
-      </Container>
-    </Navbar>
-  </div>
-{/* <div className="relative" style={{ zIndex: 0 }}>
-  <TopNav />
-</div>  */}
-  {/* ✅ MAIN SECTION */}
-  <div className="relative flex flex-col items-center justify-center mt-4">
+            </div>
 
-    {/* ✅ CARD FIXED */}
-    <div className="relative flex flex-col w-full max-w-[360px] rounded-[2.5rem] bg-gradient-to-br from-[#0d0d1c] to-[#1b1b2d] p-4 py-4 text-white shadow-inner border-4 border-orange-900">
+            <div>
+              <div className={classes.stars}></div>
+              <div className={classes.stars2}></div>
+              <div className={classes.stars3}></div>
+            </div>
 
-      <div className="space-y-6">
+            <div className={classes.innerContent}>
+              <Container>
+                <Row>
+                  <Col xs={12} md={12} lg={6}>
+                    <h1 className={classes.title}>Smart Link</h1>
+                    <p className={classes.subTitle} style={{ fontFamily: "Montserrat Alternates" }}>
+                      Create SmartLinks to open desired apps from url without login
+                    </p>
+                    <Form className={classes.signupForm} style={{ marginBottom: "0px" }} onSubmit={this.handleSubmit}>
+                      <div className="input-group mt-3" style={{ marginBottom: "0px" }}>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="paste your link here"
+                          style={{ padding: "10px" }}
+                          value={this.state.value}
+                          onChange={this.handleChange}
+                        />
+                        <div className="input-group-append flex">
+                          <button
+                            className="btn btn-secondary"
+                            type="button"
+                            style={{ padding: "11px" }}
+                            onClick={() => this.handlePaste()}
+                          >
+                            <FaPaste size="20px" />
+                          </button>
+                          <button
+                            className="btn btn-secondary border-l border-white/20"
+                            type="button"
+                            style={{ padding: "11px" }}
+                            disabled={true}
+                          >
+                            {this.state.appname === "Youtube" ? (
+                              <FaYoutube size="25px" />
+                            ) : this.state.appname === "Instagram" ? (
+                              <FaInstagram size="25px" />
+                            ) : this.state.appname === "Spotify" ? (
+                              <FaSpotify size="25px" />
+                            ) : this.state.appname === "Telegram" ? (
+                              <FaTelegram size="25px" />
+                            ) : this.state.appname === "Twitter" ? (
+                              <FaTwitter size="25px" />
+                            ) : this.state.appname === "Linkedin" ? (
+                              <FaLinkedin size="25px" />
+                            ) : this.state.appname === "Playstore" ? (
+                              <FaGooglePlay size="25px" />
+                            ) : (
+                              <FaLink size="25px" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
 
-        <h5 className="font-bold flex items-center justify-center text-center text-2xl sm:text-base">
-          Welcome to AppOpener
-        </h5>
+                      <div className="mt-3 flex flex-col sm:flex-row gap-3 w-full">
+                        <Button
+                          className={classes.btnSignUp}
+                          variant="primary"
+                          type="submit"
+                          style={{ height: "48px", flex: 1 }}
+                        >
+                          Smarten Link
+                        </Button>
+                        <Button
+                          className="btn btn-secondary rounded-lg font-bold flex items-center justify-center"
+                          type="button"
+                          onClick={this.handleOpenHeroPromoteModal}
+                          style={{ height: "48px", flex: 1 }}
+                        >
+                          Promote 4 Links (₹50)
+                        </Button>
+                      </div>
+                    </Form>
 
-        {/* STEP 1 */}
-        <div>
-          <p className="text-sm mb-1 text-gray-400">Apka Romanchic Kissa ?</p>
+                    <div>
+                      <p style={{ color: "red", paddingLeft: "10px", marginTop: "10px" }}>
+                        {this.state.errortext_url}
+                      </p>
+                      <p style={{ color: "white", fontFamily: "Montserrat Alternates", fontSize: "15.38px" }}>
+                        Login to view analytics
+                      </p>
+                    </div>
 
-          {/* ✅ INPUT FIX */}
-          <div className="flex flex-row gap-2">
-            <input
-              className="form-control flex-1 min-w-0"
-              value={this.state.value}
-              onChange={this.handleChange}
-              placeholder="Paste your Link ->"
-            />
-            <button
-              className="btn btn-secondary"
-              type="button"
-              onClick={() => this.handlePaste()}
+                    <div className="flex flex-row mt-2 items-center flex-wrap gap-3">
+                      <FaYoutube size="30px" style={{ color: "#F20200" }} />
+                      <FaInstagram size="30px" style={{ color: "#C42D8F" }} />
+                      <FaSpotify size="30px" style={{ color: "#1BCC5A" }} />
+                      <FaTwitter size="30px" style={{ color: "#1B99E5" }} />
+                      <FaTelegram size="30px" style={{ color: "#2394CC" }} />
+                      <FaLinkedin size="30px" style={{ color: "#0C61B8" }} />
+                      <FaGooglePlay size="30px" style={{ color: "white" }} />
+                      <FaGlobe size="30px" style={{ color: "#5BCEF2" }} />
+                      <span style={{ color: "white" }}>& more to come...</span>
+                    </div>
+                  </Col>
+                  
+                  <Col xs={12} md={12} lg={6} className="d-none d-lg-block relative">
+                    <img
+                      className={classes.helmetanimate}
+                      style={{
+                        width: "350px",
+                        right: "-24%",
+                        bottom: "-12%",
+                        position: "relative",
+                      }}
+                      src={helmet}
+                      alt="Helmet Graphic"
+                    />
+                  </Col>
+                </Row>
+              </Container>
+            </div>
+
+            <div className={classes.totalCount}>
+              <Container>
+                <div className={classes.separator}></div>
+                <Row className="mt-3">
+                  <Col xs={12} md={12} lg={7}>
+                    <Row className="justify-content-center text-center sm:text-left">
+                      <Col xs={6} md={3} lg={3}>
+                        <h3 className={classes.h3}>
+                          200<span className="text-white-fade">+</span> thousand
+                        </h3>
+                        <p>Links</p>
+                      </Col>
+                      <Col xs={6} md={3} lg={3}>
+                        <h3 className={classes.h3}>
+                          100<span className="text-white-fade">+</span> thousand
+                        </h3>
+                        <p>Creators</p>
+                      </Col>
+                      <Col xs={6} md={3} lg={3} className={classes.xsNone}>
+                        <h3 className={classes.h3}>
+                          200<span className="text-white-fade">+</span> million
+                        </h3>
+                        <p>Clicks</p>
+                      </Col>
+                      <Col xs={6} md={3} lg={3} className={classes.xsNone}>
+                        <h3 className={classes.h3}>
+                          99.9<span className="text-white-fade">%</span>
+                        </h3>
+                        <p>Uptime</p>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col xs={12} md={12} lg={5}></Col>
+                </Row>
+              </Container>
+            </div>
+
+            <div className={classes.displayFlex}>
+              <img
+                className={classes.bgImg}
+                src={require("../assets/bg.svg").default}
+                alt="bg transparent"
+              />
+            </div>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              preserveAspectRatio="none"
+              viewBox="0 0 1680 40"
+              className="position-absolute width-full z-1"
             >
-              <FaPaste size="20px" />
-            </button>
+              <path d="M0 40h1680V30S1340 0 840 0 0 30 0 30z" fill="#fff" />
+            </svg>
           </div>
         </div>
 
-          {/* ✅ BUTTON STACK FIX */}
-          <div className="flex-row gap-5 mt-2">
-            <button
-  className="
-    group relative overflow-hidden
-    flex items-center justify-center gap-3
-    w-full mt-3 px-3 py-2
-    rounded-2xl
-    bg-gradient-to-br from-violet-600 via-fuchsia-600 to-indigo-700
-    hover:from-violet-500 hover:via-fuchsia-500 hover:to-indigo-600
-    border border-white/20
-    shadow-[0_10px_35px_rgba(139,92,246,0.45)]
-    hover:shadow-[0_15px_45px_rgba(168,85,247,0.65)]
-    transition-all duration-300
-    hover:scale-[1.02]
-    active:scale-[0.98]
-  "
-  onClick={this.handleOpenHeroPromoteModal}
->
-  {/* Glow Effect */}
-  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-white/10 via-white/5 to-transparent" />
+        {/* Attendance, PIP Frame & Talkie widgets at the bottom */}
+        {this.state.showAttedance && (
+          <AttendanceButton setShowAttendanceButton={() => this.setState({ showAttedance: false })} />
+        )}
+        <PipIframe src={"https://www.instagram.com/reel/DZVIu2Zv5nq/"} />
 
-  {/* Premium Shine */}
-  <div className="absolute -left-20 top-0 h-full w-16 rotate-12 bg-white/20 blur-md group-hover:left-[120%] transition-all duration-1000" />
-
-  {/* Left Content */}
-  <div className="flex flex-col items-start text-left z-10">
-    <span className="text-lg font-extrabold tracking-wide text-white">
-      ADD UPTO 4 LINK 
-      SUGGESTIONS
-    </span>
-  </div>
-
-  {/* Price Badge */}
-  <div
-    className="
-      z-10 shrink-0
-      flex flex-col items-center justify-center
-      min-w-[72px]
-      px-3 py-2
-      rounded-2xl
-      bg-gradient-to-br from-yellow-300 via-amber-400 to-orange-400
-      border-2 border-yellow-100
-      shadow-lg shadow-yellow-500/40
-      text-black
-      group-hover:scale-105
-      transition-transform duration-300
-    "
-  >
-    <span className="text-[10px] font-black uppercase tracking-widest">
-      Only
-    </span>
-
-    <span className="text-xl leading-none font-extrabold">
-      ₹50
-    </span>
-  </div>
-</button>
-            <button 
-              className="flex-1 py-1 rounded-md bg-violet-700 text-white shadow-md font-bold text-lg sm:text-lg mt-4 w-full"
-              onClick={this.handleSubmit}
-            >
-              Smarten 🌟
-            </button>
-          </div>
-        </div> 
-      </div>
-  
-  <div className="relative" style={{ zIndex: 0 }}>
-  <TopNav />
-  </div> 
-    {/* ✅ LINKS SECTION - 3D ORBITING ECOSYSTEM SPHERES */}
-    {/* <div className="flex flex-col items-center bg-white/10 backdrop-blur-md rounded-xl justify-center mt-8 mb-4 relative z-10 w-full max-w-[900px] border-4 border-orange-900 p-4 overflow-hidden"> */}
-      <style>{`
-        .orbit-container {
-          --radius: 105px;
-          position: relative;
-          width: 320px;
-          height: 320px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 1.5rem auto;
-        }
-
-        @media (min-width: 640px) {
-          .orbit-container {
-            --radius: 155px;
-            width: 450px;
-            height: 450px;
-          }
-        }
-
-        /* Orbital path ring */
-        .orbit-path {
-          position: absolute;
-          width: calc(var(--radius) * 2);
-          height: calc(var(--radius) * 2);
-          border: 2px dashed rgba(255, 255, 255, 0.12);
-          border-radius: 50%;
-          pointer-events: none;
-          box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-        }
-
-        /* Central core sphere */
-        .orbit-core {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-
-  /* Realistic glossy red sphere */
-  background:
-    radial-gradient(circle at 30% 28%,
-      #ffffff 0%,
-      #ffe5e5 6%,
-      #ff8f8f 14%,
-      #ff3b3b 32%,
-      #ff0000 55%,
-      #c40000 78%,
-      #5a0000 100%
-    );
-
-  /* 3D depth + outer glow */
-  box-shadow:
-    inset -12px -14px 20px rgba(0, 0, 0, 0.45),
-    inset 10px 10px 16px rgba(255, 255, 255, 0.18),
-    0 0 18px rgba(255, 0, 0, 0.55),
-    0 0 40px rgba(255, 0, 0, 0.3);
-
-  border: 1px solid rgba(255,255,255,0.12);
-
-  z-index: 20;
-  animation: pulseCore 3s ease-in-out infinite;
-  overflow: hidden;
-}
-
-/* Main glossy reflection */
-.orbit-core::before {
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: 14px;
-  width: 600px;
-  height: 50px;
-  border-radius: 100%;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.95),
-    rgba(255,255,255,0.15)
-  );
-
-  transform: rotate(-18deg);
-  filter: blur(1px);
-}
-
-/* Lower ambient reflection */
-.orbit-core::after {
-  content: "";
-  position: absolute;
-  bottom: 10px;
-  right: 12px;
-  width: 28px;
-  height: 14px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  filter: blur(4px);
-}
-
-        @media (min-width: 640px) {
-          .orbit-core {
-            width: 105px;
-            height: 105px;
-          }
-        }
-
-        @keyframes pulseCore {
-          0%, 100% {
-            transform: scale(1);
-            box-shadow: 0 0 35px rgba(255, 94, 98, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.4);
-          }
-          50% {
-            transform: scale(1.06);
-            box-shadow: 0 0 50px rgba(255, 94, 98, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.5);
-          }
-        }
-
-        /* Orbiting item wrappers */
-        .orbit-wrapper {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          margin-top: -30px;
-          margin-left: -30px;
-          width: 60px;
-          height: 60px;
-          z-index: 10;
-        }
-
-        @media (min-width: 640px) {
-          .orbit-wrapper {
-            margin-top: -42px;
-            margin-left: -42px;
-            width: 84px;
-            height: 84px;
-          }
-        }
-
-        /* Unique Orbit Keyframe Animations with counter-rotations */
-        .orbit-0 { animation: orbit0 32s linear infinite; }
-        .orbit-1 { animation: orbit1 32s linear infinite; }
-        .orbit-2 { animation: orbit2 32s linear infinite; }
-        .orbit-3 { animation: orbit3 32s linear infinite; }
-        .orbit-4 { animation: orbit4 32s linear infinite; }
-        .orbit-5 { animation: orbit5 32s linear infinite; }
-
-        @keyframes orbit0 {
-          from { transform: rotate(0deg) translateX(var(--radius)) rotate(0deg); }
-          to { transform: rotate(360deg) translateX(var(--radius)) rotate(-360deg); }
-        }
-        @keyframes orbit1 {
-          from { transform: rotate(60deg) translateX(var(--radius)) rotate(-60deg); }
-          to { transform: rotate(420deg) translateX(var(--radius)) rotate(-420deg); }
-        }
-        @keyframes orbit2 {
-          from { transform: rotate(120deg) translateX(var(--radius)) rotate(-120deg); }
-          to { transform: rotate(480deg) translateX(var(--radius)) rotate(-480deg); }
-        }
-        @keyframes orbit3 {
-          from { transform: rotate(180deg) translateX(var(--radius)) rotate(-180deg); }
-          to { transform: rotate(540deg) translateX(var(--radius)) rotate(-540deg); }
-        }
-        @keyframes orbit4 {
-          from { transform: rotate(240deg) translateX(var(--radius)) rotate(-240deg); }
-          to { transform: rotate(600deg) translateX(var(--radius)) rotate(-600deg); }
-        }
-        @keyframes orbit5 {
-          from { transform: rotate(300deg) translateX(var(--radius)) rotate(-300deg); }
-          to { transform: rotate(660deg) translateX(var(--radius)) rotate(-660deg); }
-        }
-
-        /* Pause rotation on container hover */
-        .orbit-container:hover .orbit-wrapper {
-          animation-play-state: paused;
-        }
-
-        /* 3D Glassmorphism Sphere */
-        .orbit-sphere {
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.5) 100%);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          border: 1.5px solid rgba(255, 255, 255, 0.25);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 4px 15px rgba(255, 255, 255, 0.3);
-          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .orbit-sphere:hover {
-          transform: scale(1.22);
-          border-color: rgba(255, 255, 255, 0.6);
-          background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0.6) 100%);
-          box-shadow: 0 0 30px rgba(255, 255, 255, 0.45), inset 0 4px 20px rgba(255, 255, 255, 0.5);
-        }
-      `}</style>
-
-    {/* <div className="orbit-wrapper orbit-0"> */}
-        {/* </div> */}
-
-      <div className="orbit-container">
-        {/* Subtle path ring */}
-        <div className="orbit-path" />
-
-        {/* Pulsing Core */}
-        <div className="orbit-core flex flex-col justify-center items-center text-center">
-          <span className="font-orbitron font-extrabold text-[14px] sm:text-[17px] text-white tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] select-none">APPO</span>
-          <span className="text-[8px] sm:text-[10px] font-bold text-white/80 tracking-widest uppercase mt-0.5 select-none">Ecosys</span>
-        </div>
-
-        {/* Sphere 0: CreatorCosmos */}
-        <div className="orbit-wrapper orbit-0">
-          <a
-            href="https://www.creatorcosmos.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="orbit-sphere flex items-center justify-center no-underline"
-          >
-            <img
-              src={creatorcosmosLogo}
-              alt="AppOpener"
-              className="w-[60%] h-[60%] object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-            />
-          </a>
-        </div>
-
-        {/* Sphere 1: Superprofile */}
-        <div className="orbit-wrapper orbit-1">
-          <a
-            href="https://appø.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="orbit-sphere flex items-center justify-center no-underline"
-          >
-            <img
-              src={superprofileLogo}
-              alt="Superprofile"
-              className="w-[60%] h-[60%] object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-            />
-          </a>
-        </div>
-
-        {/* Sphere 2: Spawnser */}
-        <div className="orbit-wrapper orbit-2">
-          <a
-            href="https://spawnser.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="orbit-sphere flex items-center justify-center no-underline"
-          >
-            <img
-              src={spawnserLogo}
-              alt="Spawnser"
-              className="w-[65%] h-[65%] object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-            />
-          </a>
-        </div>
-
-        {/* Sphere 3: Deet */}
-        <div className="orbit-wrapper orbit-3">
-          <a
-            href="https://deet.me"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="orbit-sphere flex items-center justify-center no-underline"
-          >
-            <img
-              src={deetLogo}
-              alt="Deet"
-              className="w-[60%] h-[60%] object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-            />
-          </a>
-        </div>
-
-        {/* Sphere 4: LoginSkip */}
-        <div className="orbit-wrapper orbit-4">
-          <a
-            href="https://loginskip.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="orbit-sphere flex items-center justify-center no-underline p-1 text-center"
-          >
-            <span className="text-[10px] sm:text-[13px] font-black uppercase tracking-tight bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
-              LoginSkip
-            </span>
-          </a>
-        </div>
-
-        {/* Sphere 5: Indian AI */}
-        <div className="orbit-wrapper orbit-5">
-          <a
-            href="https://www.indian-ai.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="orbit-sphere flex flex-col items-center justify-center no-underline p-1 text-center"
-          >
-            <img
-              src={IndianAi}
-              alt="Indian AI"
-              className="w-[45%] h-[45%] object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-            />
-            <span className="text-[8px] sm:text-[10px] font-extrabold uppercase tracking-tight bg-gradient-to-r from-blue-400 to-blue-600 text-transparent bg-clip-text mt-0.5">
-              Indian AI
-            </span>
-          </a>
-
-        </div>
-      </div>
-    {/* </div> */}
-
-      {/* </div> */}
-    <div className="flex flex-col items-center bg-white/10 backdrop-blur-md p-2 rounded-xl justify-center mt-2 mb-4 relative -z-1 w-full max-w-[900px]">
-
-
-      {/* ✅ TEXT FIX */}
-      <h2 className="text-2xl sm:text-3xl md:text-4xl text-white text-center">
-        Preview Portal🔗
-      </h2>
-
-      <div className="flex flex-col items-center mt-3 text-center break-all px-2">
-        <a href="https://www.appopener.com/yt/share"> 
-          https://www.appopener.com/yt/share 
+        <a
+          href="https://cosmic-chat-scan.lovable.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-2 left-2 z-50"
+        >
+          <img
+            src={talkieGhost}
+            alt="Talkie"
+            style={{
+              width: 120,
+              height: 120,
+              objectFit: "contain",
+              pointerEvents: "none",
+            }}
+          />
         </a>
-        <a href="https://www.appopener.in/yt/share">
-          https://www.appopener.in/yt/share
-        </a>
-        <a href="https://www.appopener.net/free/yt/share">
-          https://www.appopener.net/free/yt/share
-        </a>
-      </div>
-    </div>
-        <div className="relative z-10 mb-4 overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
-  <img
-    src="/portal.png"
-    alt="ShareTray banner"
-    className="h-80 w-full object-cover sm:h-96"
-  />
-</div>
-<div className="w-full max-w-5xl mx-auto rounded-3xl overflow-hidden shadow-xl">
-  <iframe
-    width="100%"
-    height="500"
-    src="https://www.youtube.com/embed/cYUfdsHK858"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowFullScreen
-  />
-  <img
-    src="/sticker.png"
-    alt="ShareTray banner"
-    className="h-80 w-full object-cover sm:h-96"
-  />
-</div>
-    {modal_captcha}
-    {modal_generatelink}
-    {showTypeModal1}
-    {paymentFormModal}
-    {heroPromoteModal}
 
-    {/* Floating Talkie button — bottom left */}
-    {/* <a href="https://cosmic-chat-scan.lovable.app/" target="_blank" rel="noopener noreferrer">
-      <img
-        src={talkieGhost}
-        alt="Talkie"
-        style={{ width: 120, height: 120, objectFit: "contain", pointerEvents: "none" }}
-      />
-    </a> */}
-    <style>{`
-      @keyframes talkiePulse {
-        0%, 100% { box-shadow: 0 4px 20px rgba(126,200,227,.4), 0 0 30px rgba(168,237,234,.2); }
-        50%      { box-shadow: 0 4px 28px rgba(126,200,227,.6), 0 0 45px rgba(168,237,234,.35); }
-      }
-    `}</style>
-
-  </div>
-  {this.state.showAttedance && <AttendanceButton setShowAttendanceButton={() => this.setState({showAttedance:false})}/>}
-  <PipIframe src={"https://www.instagram.com/reel/DZVIu2Zv5nq/"} />
-
-  <a
-        href="https://cosmic-chat-scan.lovable.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-2 left-2 z-50"
->
-  <img
-    src={talkieGhost}
-    alt="Talkie"
-    style={{
-      width: 120,
-      height: 120,
-      objectFit: "contain",
-      pointerEvents: "none",
-    }}
-  />
- </a>
-</div>
+        {/* Modals from newdotin2 */}
+        {modal_captcha}
+        {showTypeModal1}
+        {modal_generatelink}
+        {paymentFormModal}
+        {heroPromoteModal}
+      </>
     );
   }
 }

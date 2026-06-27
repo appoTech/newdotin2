@@ -622,3 +622,29 @@ export async function addPagerMessage({ text, source, name, amount }) {
   }
 }
 
+export async function recordClick(apptype, shorturl, source = "iframe_overlay") {
+  try {
+    let click_api_url = process.env.REACT_APP_CLICK_API_URL || api_url || "http://localhost:5001/";
+    // Ensure trailing slash
+    if (!click_api_url.endsWith("/")) {
+      click_api_url += "/";
+    }
+    let res = await axios({
+      url: click_api_url + "api/clicks",
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        "shortUrl": shorturl,
+        "apptype": apptype,
+        "source": source
+      }
+    });
+    return res;
+  } catch (err) {
+    console.error("Failed to record click:", err);
+  }
+}
+
+

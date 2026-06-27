@@ -15,7 +15,7 @@ import GenerateLinkButton from "../components/SmartLink.jsx";
 import VideoCard from "../components/TopVideo.jsx";
 import Float from "../components/side_button";
 import Floattwo from "../components/side_button2";
-import { getURLandredirect } from "../helper/api";
+import { getURLandredirect, recordClick } from "../helper/api";
 import PageHead from "../components/Splash/PageHead";
 import { getSuggestions, GetLatestBlogs } from "../helper/api";
 import ytLogo from "../assets/yt-logos.avif";
@@ -46,8 +46,9 @@ import CreateOptionsModal from "../components/CreateOptionsModal.jsx";
 import CaptureRankModal from "../components/CaptureRankModal.jsx";
 import PromotionsModal from "../components/PromotionsModal.jsx";
 import AttendanceButton from "../components/attendanceButton.jsx";
+import Spotlight from "../components/Splash/Spotlight.jsx";
 
-// import axios from "axios";
+import axios from "axios";
 
 // Theme configurations
 const getUserAgent = () => {
@@ -188,12 +189,66 @@ const Splash = () => {
   const [link, setLink] = useState("");
   const [boardTab, setBoardTab] = useState(0); // 0=Leaderboard, 1=LaunchPad, 2=ShowCase
   const [autoRotate, setAutoRotate] = useState(true);
-  const [isOn, setIsOn] = useState(true);
+  const [isOn, setIsOn] = useState(false);
   const boardTouchRef = React.useRef({ startX: 0, startY: 0 });
   const [captureRankOpen, setCaptureRankOpen] = useState(false);
   const [openInApp, setOpenInApp] = useState(true);
   const [amount, setAmount] = useState(10000);
-  
+  const [spotlightVideos, setSpotlightVideos] = useState([]);
+  const [currentSpotlightIndex, setCurrentSpotlightIndex] = useState(0);
+
+  const getYoutubeEmbedUrl = (url) => {
+    if (!url) return "";
+    let videoId = "";
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      videoId = match[2];
+    } else {
+      const shortsReg = /\/shorts\/([a-zA-Z0-9_-]{11})/;
+      const shortsMatch = url.match(shortsReg);
+      if (shortsMatch) {
+        videoId = shortsMatch[1];
+      }
+    }
+    if (videoId) {
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&mute=1&playlist=${videoId}`;
+    }
+    return url;
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    axios.get(`${API_URL}payment/spotlight/active`)
+      .then(res => {
+        if (!isMounted) return;
+        setSpotlightVideos(res.data.videos || []);
+      })
+      .catch(err => {
+        console.error("Failed to fetch spotlight videos in Splash2:", err);
+      });
+    return () => { isMounted = false; };
+  }, []);
+
+  useEffect(() => {
+    if (spotlightVideos.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSpotlightIndex(prev => (prev + 1) % spotlightVideos.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [spotlightVideos]);
+
+  const handleOverlayClick = () => {
+    if (apptype && shorturl) {
+      recordClick(apptype, shorturl, 'iframe_overlay');
+    }
+    if (spotlightVideos && spotlightVideos.length > 0) {
+      window.open(spotlightVideos[currentSpotlightIndex].ytvideoLink, "_blank");
+    } else {
+      window.open(`https://www.youtube.com/watch?v=${state.linkMetadata.videoId || state.video_id}`, "_blank");
+    }
+  };
+
   const handleCaptureRank = (amount) => {
     setAmount(amount);
     setCaptureRankOpen(true);
@@ -296,7 +351,7 @@ const Splash = () => {
     resolved_app_intend: "",
     original_url: "",
     linkMetadata: {},
-    seconds: 11,
+    seconds: 5,
     redirectText: "LOGIN SKIP ",
     video_id: "",
     showImage: false,
@@ -430,7 +485,7 @@ useEffect(() => {
     },
     {
       name: "Top 10",
-      route: null,
+      route: `https://appopener.com/yt/${shorturl}`,
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -1007,18 +1062,18 @@ useEffect(() => {
             {(isYoutubeTag ? state.video_id : state.original_url) && (
               <div className={`relative group rounded-xl ${currentTheme.videoGlow}`}>
                 {isYoutubeTag ? (
-                  <VideoFrame
-                    iframeRef={iframeRef}
-                    videoId={state.linkMetadata.videoId || state.video_id}
-                    showControls={showControls}
-                    buttonText={buttonText}
-                    setButtonText={setButtonText}
-                    setState={setState}
-                    setShowControls={setShowControls}
-                    Mute={Mute}
-                    onSetMute={setMute}
-                    onOpenShareTray={setShareTrayOpen}
-                  />
+                  // <VideoFrame
+                  //   iframeRef={iframeRef}
+                  //   videoId={state.linkMetadata.videoId || state.video_id}
+                  //   showControls={showControls}
+                  //   buttonText={buttonText}
+                  //   setButtonText={setButtonText}
+                  //   setState={setState}
+                  //   setShowControls={setShowControls}
+                  //   Mute={Mute}
+                  //   onSetMute={setMute}
+                  //   onOpenShareTray={setShareTrayOpen}
+                  // />
                   // <iframe
                   //   ref={iframeRef}
                   //   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
@@ -1033,6 +1088,40 @@ useEffect(() => {
                   //   allow="autoplay; encrypted-media; fullscreen"
                   //   allowFullScreen
                   // ></iframe>
+                  <div className="w-full aspect-video relative flex items-center justify-center rounded-xl overflow-hidden bg-black border border-[#9D4EDD]">
+                    <iframe
+                      ref={iframeRef}
+                      className="w-full h-full object-cover"
+                      src={
+                        spotlightVideos && spotlightVideos.length > 0
+                          ? getYoutubeEmbedUrl(spotlightVideos[currentSpotlightIndex].ytvideoLink)
+                          : `https://www.youtube.com/embed/${
+                              state.linkMetadata.videoId || state.video_id
+                            }?autoplay=1&mute=1&controls=${
+                              showControls ? 1 : 0
+                            }&rel=0&loop=1&playlist=${
+                              state.linkMetadata.videoId || state.video_id
+                            }&wmode=transparent`
+                      }
+                      title={
+                        spotlightVideos && spotlightVideos.length > 0
+                          ? `Spotlight: ${spotlightVideos[currentSpotlightIndex].name}'s Video`
+                          : "AppOpener Video"
+                      }
+                      frameBorder="0"
+                      allow="autoplay; encrypted-media; fullscreen"
+                      allowFullScreen
+                    ></iframe>
+                    {spotlightVideos && spotlightVideos.length > 0 && (
+                      <div className="absolute top-3 right-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-black font-extrabold text-[11px] px-2.5 py-1 rounded shadow-[0_0_10px_rgba(250,204,21,0.6)] tracking-[1px] select-none pointer-events-none z-[150]">
+                        SPOTLIGHT ⚡
+                      </div>
+                    )}
+                    <div 
+                      className="absolute inset-0 cursor-pointer z-10" 
+                      onClick={handleOverlayClick}
+                    />
+                  </div>
                 ) : (
                   <WebsitePreviewFrame
                     url={state.original_url}
@@ -1040,7 +1129,7 @@ useEffect(() => {
                   />
                 )}
 
-                <div className="absolute bottom-4 -left-2 flex flex-col items-center z-20">
+                {/* <div className="absolute bottom-4 -left-2 flex flex-col items-center z-20">
                   <a className="no-underline">
                     <button
                       onClick={handleButtonClick}
@@ -1050,8 +1139,8 @@ useEffect(() => {
                       {redirectContent}
                     </button>
                   </a>
-                </div>
-                {isYoutubeTag && (
+                </div> */}
+                {/* {isYoutubeTag && (
                 <div className="absolute bottom-4 -right-2 flex flex-col items-center z-20">
                   <a className="no-underline text-white cursor-pointer" onClick={handlePaidScreeningClick}>
                     <button
@@ -1059,12 +1148,11 @@ useEffect(() => {
                       className="flex items-center justify-center gap-2 rounded-l-lg whitespace-nowrap text-lg font-semibold h-10 px-3 py-2 mt-2 w-full
                          bg-white/20 backdrop-blur-2xl current shadow-lg transition hover:bg-white/30"
                     >
-                      {/* {redirectContent} */}
                       PAID SCREENING
                     </button>
                   </a>
                 </div>
-                )}
+                )} */}
               </div>
             )}
 
@@ -1136,6 +1224,16 @@ useEffect(() => {
     </div>
   </div>
 )}
+                <a
+                  id="abcd" ref={continueButtonRef}
+                  href={state.resolved_app_intend || state.intentvalue || state.original_url || "#"}
+                  onClick={handleOpenInApp}
+                  className={`bg-gradient-to-r from-rose-700 to-purple-950 hover:from-orange-500 hover:to-yellow-600 text-white shadow-orange-300 no-underline flex items-center justify-center gap-2 rounded-lg whitespace-nowrap text-lg font-bold h-12 px-6 mt-8 w-full shadow-lg transition-opacity opacity-100 cursor-pointer`}
+                >
+                  <button>
+                    Watch Now
+                  </button>
+              </a>
 
             {/* Adster Banner - Below video/buttons */}
             {/* <AdsterBanner size="320x50" /> */}
@@ -1165,7 +1263,8 @@ useEffect(() => {
       </div>
     )}
 
-              <div className="w-full flex flex-row items-center gap-4 -top-4">
+        <Spotlight />
+              {/* <div className="w-full flex flex-row items-center gap-4 -top-4">
                 <a
                   href={`/barter`}
                   // onClick={()=> setPromoteModalOpen(true)}
@@ -1178,11 +1277,11 @@ useEffect(() => {
                     BARTER
                   </button>
                 </a>
-                {/* <a
+                 <a
                   // href="https://spawnser.com"
                   href="/omnitricks"
                   className={`${currentTheme.button} no-underline flex items-center justify-center gap-2 rounded-lg whitespace-nowrap text-lg font-bold h-12 px-6 mt-4 w-full shadow-lg transition-opacity opacity-80 cursor-not-allowed`}
-                > */}
+                > 
                   <button
                     type="button"
                     onClick={isInstalled ? handleBuyAction : handleInstallApp}
@@ -1192,29 +1291,20 @@ useEffect(() => {
                   >
                     {isInstalled ? "BUY" : "INSTALL"}
                   </button>
-                {/* </a> */}
+                 </a> 
                 <button
                   onClick={() => setcreateOptionsModalOpen(true)}
                   className={`${currentTheme.button} no-underline flex items-center justify-center gap-2 rounded-lg whitespace-nowrap text-lg font-bold h-12 px-6 mt-4 w-full shadow-lg transition-opacity opacity-80 cursor-pointer`}
                 >
                   <button>Write</button>
                 </button>
-              </div>
+              </div> */}
 
-            <div className="flex items-center justify-center space-x-4 overflow-x-auto px-2 mt-4">
+            {/* <div className="flex items-center justify-center space-x-4 overflow-x-auto px-2 mt-4">
               <PagerElement pagermsg={pagermsg} pageSlug={shorturl} creatorName={ytChannelDetails?.data?.channelName || ytChannelDetails?.data?.title || ChannelName || "AppOpener Creator"} />
-            </div>
+            </div> */}
 
-            {state.seconds === 0 && (<a
-                  id="abcd" ref={continueButtonRef}
-                  href={state.resolved_app_intend || state.intentvalue || state.original_url || "#"}
-                  onClick={handleOpenInApp}
-                  className={`bg-gradient-to-r from-rose-700 to-purple-950 hover:from-orange-500 hover:to-yellow-600 text-white shadow-orange-300 no-underline flex items-center justify-center gap-2 rounded-lg whitespace-nowrap text-lg font-bold h-12 px-6 mt-4 w-full shadow-lg transition-opacity opacity-100 cursor-pointer`}
-                >
-                  <button>
-                    Forgot something? App Open, Tap Close Pls
-                  </button>
-              </a>)}
+            
 
             {/* <AdsterBanner size="300x250" /> */}
             {/* <nav className="bg-black/40 text-white w-full mb-2 mt-2 rounded-lg shadow-[0_0_20px_#00F5FF]/50">
@@ -1265,7 +1355,7 @@ useEffect(() => {
                 </button>
               }
               </div>
-              <div className="flex flex-col items-center justify-center text-md font-bold">
+              {/* <div className="flex flex-col items-center justify-center text-md font-bold">
                 <span className="text-sm mb-1"> ÅShow</span>
                 <button
                   onClick={() => setIsOn(!isOn)}
@@ -1282,12 +1372,12 @@ useEffect(() => {
                     {isOn ? "On" : "Off"}
                   </span>
                 </button>
-              </div>
+              </div> */}
             </div>
 
-            {isOn ? (
+            {/* {isOn ? (
               <>
-                {/* ═══ TAB BAR ═══ */}
+
                 <div className="flex w-full gap-1 mb-3 rounded-xl overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
                   {BOARD_TABS.map((tab, i) => (
                     <button
@@ -1307,7 +1397,6 @@ useEffect(() => {
                   ))}
                 </div>
 
-                {/* ═══ SWIPEABLE BOARD PANELS ═══ */}
                 <div
                   className="w-full overflow-hidden"
                   onTouchStart={(e) => {
@@ -1333,10 +1422,8 @@ useEffect(() => {
                     className="flex transition-transform duration-400 ease-out"
                     style={{ transform: `translateX(-${boardTab * 100}%)` }}
                   >
-                    {/* ── PANEL 0: LEADERBOARD ── */}
                     <div className="w-full flex-shrink-0">
                       
-                      {/* Capture Rank Banner */}
                       <div 
                         onClick={() => handleCaptureRank(20000)}
                         className="w-full max-w-[90vw] mx-auto mb-3 cursor-pointer overflow-hidden rounded-xl bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 p-[2px] shadow-[0_0_15px_rgba(234,179,8,0.5)] transition-transform hover:scale-[1.02]"
@@ -1358,7 +1445,6 @@ useEffect(() => {
   {TopVideo.map((item, index) => (
     <React.Fragment key={index}>
       
-      {/* Video Row */}
       <a
         href={item["smart_link"]}
         className="no-underline block transition hover:opacity-80"
@@ -1390,7 +1476,6 @@ useEffect(() => {
         </div>
       </a>
 
-      {/* 👑 Inject after 3rd item */}
       {index === 2 && (
         <div 
           onClick={() => handleCaptureRank(5000)}
@@ -1430,7 +1515,6 @@ useEffect(() => {
   ))}
 </div>
 </div>
-        {/* Panel 1: Movie trailer */}
           <div className="w-full flex-shrink-0">
       <div className={`w-full ${currentTheme.card} rounded-xl ${currentTheme.shadow} shadow-xl overflow-hidden`}>
         <div className={`flex items-center justify-between px-4 py-3 border-b ${currentTheme.navbar}`}>
@@ -1490,7 +1574,6 @@ useEffect(() => {
       </div>
     </div>
 
-    {/* ── PANEL 2: Work to earn ── */}
     <div className="w-full flex-shrink-0">
       <div className={`w-full ${currentTheme.card} rounded-xl ${currentTheme.shadow} shadow-xl overflow-hidden`}>
         <div className={`flex items-center justify-between px-4 py-3 border-b ${currentTheme.navbar}`}>
@@ -1506,9 +1589,9 @@ useEffect(() => {
                   {job.hot && <span className="text-[10px] px-1.5 py-0.5 bg-red-500/20 text-red-400 rounded-full font-bold flex-shrink-0">🔥 HOT</span>}
                 </div>
                 <p className="text-xs opacity-60 mt-0.5">{job.company} · {job.type}</p>
-                {/* <div className="flex gap-1.5 mt-1.5 flex-wrap">
+                <div className="flex gap-1.5 mt-1.5 flex-wrap">
                   {job.tags.map(t => <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 font-medium">{t}</span>)}
-                </div> */}
+                </div> 
               </div>
               <span className={`text-sm font-bold ${currentTheme.accent} whitespace-nowrap`}>{job.salary}</span>
             </div>
@@ -1521,7 +1604,6 @@ useEffect(() => {
     </div>
 
 
-    {/* ── PANEL 3: Buy Cart ── */}
     <div className="w-full flex-shrink-0">
       <div className={`w-full ${currentTheme.card} rounded-xl ${currentTheme.shadow} shadow-xl overflow-hidden`}>
         <div className={`flex items-center justify-between px-4 py-3 border-b ${currentTheme.navbar}`}>
@@ -1557,7 +1639,6 @@ useEffect(() => {
   </div>
 </div>
 
-                {/* Dot indicators */}
                 <div className="flex gap-2 mt-3">
                   {BOARD_TABS.map((_, i) => (
                     <div
@@ -1572,8 +1653,8 @@ useEffect(() => {
                     />
                   ))}
                 </div>
-              </>
-            ) : (
+              </> */}
+            {/* ) : ( */}
               <div
                 className={`flex flex-col w-full items-center gap-6 p-4 sm:p-6 rounded-xl border-2 ${currentTheme.card} ${currentTheme.shadow}`}
               >
@@ -1640,7 +1721,7 @@ useEffect(() => {
                   )}
                 </div>
               </div>
-            )}
+            {/* )} */}
           </div>
 
           {/* Adster Banner - Below Leaderboard/Featured */}
@@ -1650,7 +1731,7 @@ useEffect(() => {
             className="flex flex-col max-w-[90vw] font-bold text-lg items-center justify-center mt-4 px-4"
             onClick={() => setShowGenerateLink(true)}
           >
-            <h1 className="text-3xl sm:text-4xl text-gray-600 bg-gray-300 rounded-full px-2 font-semibold -mb-2">+</h1>
+            {/* <h1 className="text-3xl sm:text-4xl text-gray-600 bg-gray-300 rounded-full px-2 font-semibold -mb-2">+</h1> */}
             <div className="flex items-center justify-center">
               <img src={logo} className="w-16 h-16" />{" "}
               <span className="text-3xl sm:text-4xl font-bold bg-gradient-to-br from-[#00F5FF] via-[#9D4EDD] to-[#FF00A0] text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(255,0,160,0.5)]">Join Us</span>
@@ -1658,7 +1739,7 @@ useEffect(() => {
             
           </button>
 
-          {!showTop && (
+          {/* {!showTop && (
              <div className="flex flex-col items-center justify-center mt-6 mb-2 animate-bounce cursor-pointer opacity-70 hover:opacity-100 transition-opacity" onClick={() => { setshowTop(true); }}>
                 <span className="text-sm mb-1 uppercase tracking-widest font-semibold text-gray-500">Open Tabs</span>
                 <ChevronDown size={32} className="text-gray-500" />
@@ -1725,7 +1806,7 @@ useEffect(() => {
                 <ChevronUp size={32} className="text-gray-500" />
               </div>
             )}
-          </div>
+          </div> */}
 
           <ContactDialog
             open={dialogOpen}

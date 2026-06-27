@@ -28,8 +28,8 @@ const SplashNavbar = ({
   const handleNavigation = (route, name) => {
     if (name === "Club") {
       setDialogOpen?.(true);
-    } else if (name === "Top 10") {
-      setShowTop?.(!showTop);
+    // } else if (name === "Top 10") {
+    //   setShowTop?.(!showTop);
     } else if (route?.startsWith("http")) {
       window.location.href = route;
     } else {
@@ -38,7 +38,7 @@ const SplashNavbar = ({
   };
 
   return (
-    <div className={`relative w-full ${currentTheme.navbar} -top-8`}>
+    <div className={`relative w-full ${currentTheme.navbar}`}>
       <div
         className={`absolute -top-6 left-1/2 transform -translate-x-1/2 flex items-center justify-center mr-1 ${currentTheme.button} rounded-full`}
         onClick={() => onOpenShareTray?.()}
@@ -56,7 +56,7 @@ const SplashNavbar = ({
       </div>
 
       <nav
-        className={`${currentTheme.button} w-full mb-2 mt-8 rounded-b-lg shadow-[0_0_20px_#00F5FF]/50`}
+        className={`${currentTheme.button} w-full mt-8 rounded-lg shadow-[0_0_20px_#00F5FF]/50`}
       >
         <div className="flex justify-around items-center text-center h-16 px-2 gap-6">
           {navItems.map((item, index) => {
