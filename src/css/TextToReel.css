@@ -1,0 +1,145 @@
+/* Scoped styles for the Text2Reel page */
+
+.text-to-reel-theme {
+  --radius: 0.875rem;
+  
+  /* HSL-compatible values for Tailwind theme colors */
+  --background: 270 1% 13%;
+  --foreground: 0 0% 98%;
+  --card: 270 1% 17%;
+  --card-foreground: 0 0% 98%;
+  --popover: 270 1% 16%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 44 92% 50%;            /* signature gold/amber */
+  --primary-foreground: 0 0% 15%;
+  --secondary: 270 2% 22%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 270 2% 20%;
+  --muted-foreground: 270 2% 68%;
+  --accent: 347 100% 60%;            /* electric red accent */
+  --accent-foreground: 0 0% 98%;
+  --destructive: 350 90% 55%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 100% / 8%;
+  --input: 0 0% 100% / 10%;
+  --ring: 44 92% 50%;
+
+  /* Scoped non-Tailwind variables */
+  --glass: hsl(0 0% 100% / 4%);
+  --glass-border: hsl(0 0% 100% / 10%);
+
+  --gradient-hero: radial-gradient(1200px 600px at 20% 0%, hsl(280 40% 30% / 0.35), transparent 60%),
+                   radial-gradient(900px 500px at 90% 30%, hsl(30 50% 40% / 0.25), transparent 60%),
+                   linear-gradient(180deg, hsl(270 1% 13%), hsl(270 1% 10%));
+  --gradient-gold: linear-gradient(135deg, hsl(44 92% 60%), hsl(35 85% 45%));
+  --shadow-glow: 0 0 40px hsl(44 92% 50% / 0.25), 0 0 80px hsl(44 92% 50% / 0.15);
+  --shadow-elegant: 0 30px 60px -20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Page base styles within this container */
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glass panel utility styling */
+.text-to-reel-theme .glass-panel {
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-elegant);
+}
+
+.text-to-reel-theme .glass-soft {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.text-to-reel-theme .text-gradient-gold {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-to-reel-theme .hero-bg {
+  background: var(--gradient-hero);
+}
+
+/* Reel scene animations */
+@keyframes reel-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes reel-slide-left { from { opacity: 0; transform: translateX(40%); } to { opacity: 1; transform: translateX(0); } }
+@keyframes reel-slide-up { from { opacity: 0; transform: translateY(40%); } to { opacity: 1; transform: translateY(0); } }
+@keyframes reel-zoom-pop { 0% { opacity: 0; transform: scale(0.4); } 60% { opacity: 1; transform: scale(1.08); } 100% { transform: scale(1); } }
+@keyframes reel-bounce { 0% { opacity: 0; transform: translateY(-30%); } 50% { transform: translateY(8%); } 70% { transform: translateY(-4%); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes reel-shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-2%); } 40% { transform: translateX(2%); } 60% { transform: translateX(-1%); } 80% { transform: translateX(1%); } }
+@keyframes reel-glitch {
+  0% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  20% { clip-path: inset(20% 0 30% 0); transform: translate(-2%, 0); }
+  40% { clip-path: inset(50% 0 10% 0); transform: translate(2%, 0); }
+  60% { clip-path: inset(10% 0 60% 0); transform: translate(-1%, 0); }
+  100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+}
+@keyframes reel-pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.06); opacity: 0.85; } }
+@keyframes reel-letter { from { opacity: 0; transform: translateY(40%) rotateX(-40deg); } to { opacity: 1; transform: none; } }
+@keyframes cursor-blink { 50% { opacity: 0; } }
+
+.text-to-reel-theme .anim-fade_in { animation: reel-fade-in 0.5s var(--transition-smooth) both; }
+.text-to-reel-theme .anim-slide_left { animation: reel-slide-left 0.55s var(--transition-smooth) both; }
+.text-to-reel-theme .anim-slide_up { animation: reel-slide-up 0.55s var(--transition-smooth) both; }
+.text-to-reel-theme .anim-zoom_pop { animation: reel-zoom-pop 0.55s var(--transition-smooth) both; }
+.text-to-reel-theme .anim-bounce { animation: reel-bounce 0.7s var(--transition-smooth) both; }
+.text-to-reel-theme .anim-shake { animation: reel-shake 0.5s ease-in-out both; }
+.text-to-reel-theme .anim-glitch { animation: reel-glitch 0.5s steps(6) both; }
+.text-to-reel-theme .anim-pulse { animation: reel-pulse 1.2s ease-in-out infinite; }
+
+.text-to-reel-theme .letter-by-letter > span {
+  display: inline-block;
+  animation: reel-letter 0.4s var(--transition-smooth) both;
+}
+
+.text-to-reel-theme .typewriter-cursor::after {
+  content: "▍";
+  margin-left: 0.05em;
+  animation: cursor-blink 1s steps(2) infinite;
+  color: currentColor;
+}
+
+/* Custom range inputs */
+.text-to-reel-theme input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  height: 6px;
+  outline: none;
+}
+.text-to-reel-theme input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  cursor: pointer;
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  transition: transform 0.1s ease;
+}
+.text-to-reel-theme input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Soft scrollbar within scoped container */
+.text-to-reel-theme ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.text-to-reel-theme ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+.text-to-reel-theme ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.16);
+}

@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    {
+      "source": "/yt/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i)^(?!.*(facebookexternalhit|facebot|whatsapp|twitterbot|telegrambot|slackbot|discordbot|pinterest|preview|linkedinbot|skypeuripreview)).*"
+        }
+      ],
+      "destination": "/index.html"
+    },
+    {
+      "source": "/yt/:slug",
+      "destination": "/api/video-preview"
+    }
+  ]
+}

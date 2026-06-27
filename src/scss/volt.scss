@@ -1,0 +1,26 @@
+
+
+// Bootstrap mixins and functions
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/functions";
+
+// Change variables here
+@import "volt/variables";
+
+
+
+
+
+// volt mixins & functions
+@import "volt/mixins";
+@import "volt/functions";
+
+
+
+// Layout
+@import "volt/layout";
+
+// Components
+@import "volt/components";
+
+// write your custom styles here!

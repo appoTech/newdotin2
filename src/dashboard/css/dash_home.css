@@ -1,0 +1,6 @@
+.yt_thumnbnail{
+    width:50px;
+}
+.yt_thumnbnail:hover{
+    width:100px;
+}

@@ -1,0 +1,315 @@
+/* ── Payment Page Styles ── */
+
+.payment-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  padding: 20px;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.payment-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Header ── */
+.payment-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.payment-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.payment-header h1 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.payment-header p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ── Form ── */
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.form-group label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.form-group input,
+.form-group select {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff80' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.form-group select option {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+/* ── Button ── */
+.payment-btn {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  margin-top: 8px;
+}
+
+.payment-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6d28d9, #5b21b6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.35);
+}
+
+.payment-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.payment-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top: 2.5px solid #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Error ── */
+.error-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #fca5a5;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Footer ── */
+.payment-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ── Success Screen ── */
+.success-container {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 40px;
+  color: #fff;
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.success-container h2 {
+  color: #fff;
+  font-size: 24px;
+  margin: 0 0 12px;
+}
+
+.order-id-text {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+  font-family: monospace;
+  margin: 0 0 8px;
+}
+
+.success-msg {
+  color: #6ee7b7;
+  font-size: 15px;
+  margin: 0 0 28px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .payment-card {
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .payment-header h1 {
+    font-size: 22px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+}
+
+/* ── Pending Screen ── */
+.pending-container {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.pending-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+}
+
+.pending-container h2 {
+  color: #fff;
+  font-size: 24px;
+  margin: 0 0 12px;
+}
+
+.pending-msg {
+  color: #fbbf24;
+  font-size: 14px;
+  margin: 0 0 28px;
+  line-height: 1.5;
+}
+
+.pending-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-btn-secondary {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.payment-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Polling Banner ── */
+.polling-banner {
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: #c4b5fd;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}

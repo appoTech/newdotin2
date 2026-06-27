@@ -1,0 +1,197 @@
+/* ===== Omnitrix Wheel — Golden Theme ===== */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+
+/* ─── CSS Custom Properties ─── */
+:root {
+  --gold: 42, 100%, 55%;
+  --gold-light: 45, 100%, 70%;
+  --gold-dark: 36, 100%, 40%;
+}
+
+/* ─── Page background ─── */
+.omni-bg {
+  background:
+    radial-gradient(ellipse at 20% 50%, hsla(42, 80%, 50%, .06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsla(36, 80%, 50%, .05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, hsla(45, 60%, 40%, .04) 0%, transparent 50%),
+    #050505;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ─── Scan-line overlay ─── */
+.omni-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 2px,
+    hsla(42, 80%, 50%, .012) 2px, hsla(42, 80%, 50%, .012) 4px
+  );
+  animation: omni-scan 8s linear infinite;
+  z-index: 1;
+}
+@keyframes omni-scan {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 200px; }
+}
+
+/* ─── Fonts ─── */
+.font-orbitron { font-family: 'Orbitron', sans-serif; }
+.font-royal    { font-family: 'Cormorant Garamond', serif; }
+
+/* ─── Neon glow (gold) ─── */
+.neon-glow-gold {
+  box-shadow:
+    0 0 12px hsl(var(--gold) / 0.5),
+    0 0 35px hsl(var(--gold) / 0.25),
+    0 0 70px hsl(var(--gold) / 0.1),
+    inset 0 0 25px hsl(var(--gold) / 0.08);
+}
+
+/* ─── Shimmer text ─── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.shimmer-text {
+  background: linear-gradient(90deg,
+    hsl(var(--gold)) 0%, hsl(var(--gold-light)) 25%,
+    hsl(var(--gold)) 50%, hsl(var(--gold-light)) 75%,
+    hsl(var(--gold)) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ─── Gold gradient text ─── */
+.gold-gradient-text {
+  background: linear-gradient(135deg,
+    hsl(var(--gold-dark)), hsl(var(--gold)),
+    hsl(var(--gold-light)), hsl(var(--gold))
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 6s linear infinite;
+}
+
+/* ─── Soft float ─── */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-6px); }
+}
+.float-soft { animation: float-soft 3s ease-in-out infinite; }
+
+/* ─── Alien pulse ─── */
+@keyframes alien-pulse {
+  0%, 100% { box-shadow: 0 0 15px hsl(var(--gold) / 0.3), inset 0 0 10px hsl(var(--gold) / 0.1); }
+  50%      { box-shadow: 0 0 30px hsl(var(--gold) / 0.5), inset 0 0 20px hsl(var(--gold) / 0.2); }
+}
+.alien-pulse { animation: alien-pulse 2s ease-in-out infinite; }
+
+/* ─── Slow rotate ─── */
+@keyframes slow-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.slow-rotate { animation: slow-rotate 30s linear infinite; }
+
+/* ─── Breathing glow ─── */
+@keyframes breathe-gold {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.7; }
+}
+.breathe-gold { animation: breathe-gold 3s ease-in-out infinite; }
+
+/* ─── Watch bezel ─── */
+.watch-bezel {
+  border: 2px solid hsl(var(--gold) / 0.4);
+  box-shadow:
+    inset 0 0 30px hsl(0 0% 0% / 0.8),
+    inset 0 0 60px hsl(var(--gold) / 0.03),
+    0 0 0 3px hsl(0, 0%, 8%),
+    0 0 0 5px hsl(var(--gold) / 0.2),
+    0 0 0 7px hsl(0, 0%, 5%),
+    0 4px 20px hsl(0 0% 0% / 0.8),
+    0 8px 40px hsl(0 0% 0% / 0.5),
+    0 0 30px hsl(var(--gold) / 0.08);
+}
+
+/* ─── Floating particles ─── */
+.omni-particle {
+  position: fixed;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: hsla(42, 80%, 55%, .3);
+  pointer-events: none;
+  z-index: 0;
+  animation: omni-float-particle linear infinite;
+}
+@keyframes omni-float-particle {
+  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+}
+
+/* ─── Rotating gear decoration ─── */
+.omni-gear {
+  position: fixed;
+  opacity: .035;
+  z-index: 0;
+  animation: omni-rotate 40s linear infinite;
+}
+.omni-gear-reverse { animation: omni-rotate-reverse 55s linear infinite; }
+@keyframes omni-rotate   { to { transform: rotate(360deg);  } }
+@keyframes omni-rotate-reverse { to { transform: rotate(-360deg); } }
+
+/* ─── Hero dial glow ─── */
+.omni-dial {
+  animation: omni-dial-glow 3s ease-in-out infinite;
+}
+@keyframes omni-dial-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px hsla(42,100%,55%,.4))
+            drop-shadow(0 0 40px hsla(42,100%,55%,.15));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px hsla(42,100%,55%,.7))
+            drop-shadow(0 0 60px hsla(42,100%,55%,.25));
+  }
+}
+
+/* ─── Back button ─── */
+.omni-back {
+  background: hsla(42, 80%, 50%, .08);
+  border: 1px solid hsla(42, 80%, 50%, .2);
+  color: hsl(42, 100%, 55%);
+  border-radius: .75rem;
+  padding: .5rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+.omni-back:hover {
+  background: hsla(42, 80%, 50%, .18);
+  box-shadow: 0 0 15px hsla(42, 80%, 50%, .2);
+}
+
+/* ─── Heading line ─── */
+.omni-heading-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsla(42, 100%, 55%, .5), transparent);
+  border: none;
+  margin: .5rem auto 2rem;
+  width: 120px;
+}

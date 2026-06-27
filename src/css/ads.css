@@ -1,0 +1,19 @@
+.fullAds { 
+    width: 100%; 
+    /* height: 100px;  */
+    display: inline-block;
+    text-align: center;
+}
+
+@media(min-width: 500px) { 
+    .fullAds { 
+        width: 100%; 
+        /* height: 60px;  */
+    } 
+}
+@media(min-width: 800px) { 
+    .fullAds { 
+        width: 100%; 
+        /* height: 90px;  */
+    } 
+}

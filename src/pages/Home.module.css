@@ -1,0 +1,10 @@
+body{
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    overflow-x: hidden;    
+    position: relative;
+}
+.mainContainer{
+    width: 100%;
+    position: relative;
+}

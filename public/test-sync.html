@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sync Test (improved)</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  </head>
+  <body>
+    <h3>Open this in TWO browser tabs!</h3>
+    <p>Room: <strong id="rid">room-xyz</strong></p>
+    <p>Latency (est one-way): <span id="lat">-</span> ms</p>
+    <button id="playBtn">Send Play @ 12s</button>
+    <button id="pauseBtn">Send Pause @ 23s</button>
+
+    <script>
+      const serverUrl = "http://localhost:5001";
+      const roomId = "room-xyz";
+      const videoId = "dQw4w9WgXcQ"; // unused in this test page but kept for parity
+      document.getElementById("rid").innerText = roomId;
+
+      const socket = io(serverUrl, { transports: ["websocket"] });
+      // Rolling RTT history (ms)
+      const rttHistory = [];
+      function pushRtt(ms) {
+        rttHistory.push(ms);
+        if (rttHistory.length > 12) rttHistory.shift();
+      }
+      function avgRtt() {
+        if (!rttHistory.length) return 0;
+        return rttHistory.reduce((a, b) => a + b, 0) / rttHistory.length;
+      }
+
+      // estimated one-way latency (ms)
+      function getOneWayMs() {
+        return avgRtt() / 2;
+      }
+
+      // flag to avoid re-emitting when we're applying a remote event
+      let applyingRemote = false;
+
+      socket.on("connect", () => {
+        socket.emit("join", { roomId, videoId });
+        console.log("connected", socket.id);
+        measurePing(); // immediate measure
+        setInterval(measurePing, 2500);
+      });
+
+      socket.on("joined", (data) => {
+        console.log("joined:", data);
+      });
+
+      socket.on("control", ({ from, payload }) => {
+        console.log("received control from", from, payload);
+        // apply with latency compensation
+        applyRemoteControl(payload);
+      });
+
+      // Accurate ping measurement: measure RTT via emit callback
+      function measurePing() {
+        const t0 = Date.now();
+        // use timeout callback style; server's ping-client returns serverTime in callback as well
+        socket.timeout(2000).emit("ping-client", null, (resp) => {
+          const t1 = Date.now();
+          const rtt = t1 - t0;
+          pushRtt(rtt);
+          document.getElementById("lat").innerText = Math.round(getOneWayMs());
+          // you may also use resp.serverTime for more advanced clock sync
+        });
+      }
+
+      // Helper: send control message (sender uses Date.now() timestamp)
+      function sendControl(payload) {
+        payload.timestamp = Date.now();
+        socket.emit("control", { roomId, payload });
+        console.log("sent control", payload);
+      }
+
+      document.getElementById("playBtn").addEventListener("click", () => {
+        sendControl({ type: "play", currentTime: 12.34 });
+      });
+
+      document.getElementById("pauseBtn").addEventListener("click", () => {
+        sendControl({ type: "pause", currentTime: 23.45 });
+      });
+
+      // DRIFT thresholds (seconds)
+      const DRIFT_THRESHOLD = 0.6; // >0.6s => seek
+      const ACCEPTABLE_DRIFT = 0.25; // >0.25s => gentle corrective action
+
+      // Dummy player abstraction for this test page:
+      // replace this with your YouTube player calls (player.playVideo(), player.pauseVideo(), player.seekTo(), player.getCurrentTime())
+      const DummyPlayer = {
+        state: "paused", // "playing" | "paused"
+        curTime: 0,
+        // emulate getCurrentTime
+        getCurrentTime() {
+          return this.curTime;
+        },
+        playVideo() {
+          this.state = "playing";
+          console.log("[player] play");
+        },
+        pauseVideo() {
+          this.state = "paused";
+          console.log("[player] pause");
+        },
+        seekTo(t, allowSeekAhead = true) {
+          this.curTime = t;
+          console.log("[player] seekTo", t);
+        },
+      };
+
+      // apply remote control with one-way latency scheduling and drift compensation
+      function applyRemoteControl(payload) {
+        const now = Date.now();
+        const oneWay = getOneWayMs(); // ms
+        // when sender intended the action to take effect on their side:
+        const intendedTime = payload.timestamp || now;
+        // desired execution time on THIS client:
+        const desiredProcTime = intendedTime + oneWay;
+        let delayMs = desiredProcTime - now;
+        if (delayMs < 0) delayMs = 0; // already late
+
+        // target playback time: account for the delay (advance by delay seconds)
+        let targetTime = (payload.currentTime || 0) + delayMs / 1000;
+
+        // schedule the action
+        setTimeout(() => {
+          applyingRemote = true;
+          try {
+            const localTime = DummyPlayer.getCurrentTime();
+            const drift = Math.abs(localTime - targetTime);
+
+            if (payload.type === "play") {
+              if (drift > DRIFT_THRESHOLD) {
+                // big drift -> seek then play
+                DummyPlayer.seekTo(targetTime, true);
+              } else if (Math.abs(localTime - targetTime) > ACCEPTABLE_DRIFT) {
+                // small drift -> seek but not heavy
+                DummyPlayer.seekTo(targetTime, true);
+              }
+              DummyPlayer.playVideo();
+            } else if (payload.type === "pause") {
+              if (drift > DRIFT_THRESHOLD) {
+                DummyPlayer.seekTo(targetTime, true);
+              }
+              DummyPlayer.pauseVideo();
+            } else if (payload.type === "seek") {
+              // immediate seek to targetTime
+              DummyPlayer.seekTo(targetTime, true);
+            } else if (payload.type === "sync") {
+              // host sync message - payload may contain paused flag
+              const paused = !!payload.paused;
+              if (Math.abs(localTime - targetTime) > DRIFT_THRESHOLD) {
+                DummyPlayer.seekTo(targetTime, true);
+                if (paused) DummyPlayer.pauseVideo();
+                else DummyPlayer.playVideo();
+              } else {
+                // small drift: only adjust play/pause state
+                if (paused && DummyPlayer.state !== "paused")
+                  DummyPlayer.pauseVideo();
+                if (!paused && DummyPlayer.state !== "playing")
+                  DummyPlayer.playVideo();
+              }
+            }
+          } catch (e) {
+            console.warn("applyRemoteControl error", e);
+          } finally {
+            // clear flag after short delay (player emits events that might be interpreted)
+            setTimeout(() => (applyingRemote = false), 250);
+          }
+        }, delayMs);
+      }
+
+      // OPTIONAL: if you have a host, host should send periodic sync messages
+      // Simulate as sender for now: if this tab is the host, send sync every 8s
+      // (in real app you should choose host based on server-provided hostId)
+      // setInterval(() => {
+      //   sendControl({ type: "sync", currentTime: DummyPlayer.getCurrentTime(), paused: DummyPlayer.state !== "playing" });
+      // }, 8000);
+    </script>
+  </body>
+</html>

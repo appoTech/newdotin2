@@ -1,0 +1,18 @@
+/* styles.css */
+
+/* For WebKit browsers */
+::-webkit-scrollbar {
+    width: 6px;
+
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: white; /* Change this to your desired color */
+    border-radius: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    /* background-color: #f1f1f1; Change this to your desired color */
+    border-radius: 6px;
+  }
+  

@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Rubik";
+  src: url("./fonts/rubik.woff2") format("woff2"),
+    url("./fonts/rubik.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+    --background: 230 25% 5%;
+    --foreground: 220 20% 90%;
+
+    --card: 230 20% 8%;
+    --card-foreground: 220 20% 90%;
+
+    --popover: 230 20% 8%;
+    --popover-foreground: 220 20% 90%;
+
+    --primary: 25 90% 55%;
+    --primary-foreground: 230 25% 5%;
+
+    --secondary: 220 30% 15%;
+    --secondary-foreground: 220 20% 85%;
+
+    --muted: 220 20% 12%;
+    --muted-foreground: 220 15% 50%;
+
+    --accent: 200 80% 50%;
+    --accent-foreground: 230 25% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 20% 15%;
+    --input: 220 20% 15%;
+    --ring: 25 90% 55%;
+
+    --radius: 0.75rem;
+
+    --glow-warm: 25 95% 60%;
+    --glow-cool: 210 80% 55%;
+    --orb-gold: 42 90% 65%;
+    --core-plasma: 15 85% 50%;
+    --void: 230 30% 3%;
+    
+  }
+
+.markdown-content * {
+  color: white !important;
+}
+
+.markdown-content a {
+  color: #3b82f6 !important; /* Tailwind's 'text-blue-500' */
+  text-decoration: underline; /* Ensures links are clearly visible */
+}
+
+.markdown-content a:hover {
+  color: #2563eb !important; /* Tailwind's 'text-blue-600' */
+}
+
+.firework {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, transparent);
+  box-shadow: 
+    0 0 10px #fff, 
+    0 0 20px #ff0, 
+    0 0 40px #ff8000;
+  opacity: 0.9;
+  animation: firework-explode 1.6s ease-out infinite;
+}
+
+/* Different firework positions */
+.firework-1 { top: 20%; left: 30%; animation-delay: 0s; }
+.firework-2 { top: 40%; left: 70%; animation-delay: 0.4s; }
+.firework-3 { top: 60%; left: 50%; animation-delay: 0.8s; }
+.firework-4 { top: 80%; left: 20%; animation-delay: 1.2s; }
+.firework-5 { top: 30%; left: 80%; animation-delay: 1.6s; }
+
+/* Main explosion animation */
+@keyframes firework-explode {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+    box-shadow:
+      0 0 10px #fff,
+      0 0 20px #ff0,
+      0 0 40px #ff8000;
+  }
+  25% {
+    transform: scale(2);
+    opacity: 1;
+    box-shadow:
+      20px -20px 10px #ff4444,
+      -20px -20px 10px #44ff44,
+      -20px 20px 10px #4488ff,
+      20px 20px 10px #ffff44;
+  }
+  50% {
+    transform: scale(2.5);
+    opacity: 0.9;
+    box-shadow:
+      30px -30px 10px #ff0,
+      -30px -30px 10px #0ff,
+      -30px 30px 10px #f0f,
+      30px 30px 10px #ff4500;
+  }
+  75% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
+  
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 6s linear infinite; /* slower speed */
+}
+
+/* Custom theme text accent gradients */
+.theme-accent-morning {
+  background-image: linear-gradient(to right, #f0ebb4, #f58c28, #a02d0f) !important;
+  background-image: radial-gradient(
+    circle at 50% var(--gy, 50%),
+    #f0ebb4 0%,
+    #f58c28 50%,
+    #a02d0f 90%,
+    rgba(160, 45, 15, 0) 150%
+  ) !important;
+  background-image: radial-gradient(
+    circle at 50% var(--gy, 50%),
+    oklch(0.94 0.16 110) 0%,
+    oklch(0.78 0.24 60) 50%,
+    oklch(0.45 0.22 25) 90%,
+    rgba(160, 45, 15, 0) 150%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.theme-accent-evening {
+  background-image: linear-gradient(to right, #f5dca0, #e65032, #781e64) !important;
+  background-image: radial-gradient(
+    circle at 50% var(--gy, 50%),
+    #f5dca0 0%,
+    #e65032 50%,
+    #781e64 90%,
+    rgba(120, 30, 100, 0) 150%
+  ) !important;
+  background-image: radial-gradient(
+    circle at 50% var(--gy, 50%),
+    oklch(0.92 0.13 85) 0%,
+    oklch(0.72 0.27 18) 50%,
+    oklch(0.42 0.18 320) 90%,
+    rgba(120, 30, 100, 0) 150%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+.theme-accent-night {
+  background-image: linear-gradient(to right, #c8f0fa, #3cb4e6, #1e288c) !important;
+  background-image: radial-gradient(
+    circle at 50% var(--gy, 50%),
+    #c8f0fa 0%,
+    #3cb4e6 50%,
+    #1e288c 90%,
+    rgba(30, 40, 140, 0) 150%
+  ) !important;
+  background-image: radial-gradient(
+    circle at 50% var(--gy, 50%),
+    oklch(0.95 0.12 200) 0%,
+    oklch(0.75 0.25 220) 50%,
+    oklch(0.40 0.20 280) 90%,
+    rgba(30, 40, 140, 0) 150%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
