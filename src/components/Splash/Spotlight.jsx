@@ -172,7 +172,7 @@ const Spotlight = ({ onVideosFetched, onIndexChange }) => {
       setVipStep("paying");
 
       const Cashfree = await loadCashfreeSDK();
-      const cashfree = Cashfree({ mode: "sandbox" });
+      const cashfree = Cashfree({ mode: "production" });
 
       cashfree
         .checkout({

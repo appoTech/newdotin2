@@ -149,7 +149,7 @@ const ExpressPromote = () => {
       // 2. Open Cashfree checkout
       setStep("paying");
       const Cashfree = await loadCashfreeSDK();
-      const cashfree = Cashfree({ mode: "sandbox" }); // change to "production" for live
+      const cashfree = Cashfree({ mode: "production" }); // change to "production" for live
 
       cashfree
         .checkout({
