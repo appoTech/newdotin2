@@ -264,7 +264,7 @@ export default function SyncYouTubePage(props) {
       }
 
       const cashfree = new window.Cashfree({
-        mode: "production",
+        mode: "sandbox",
       });
 
       await cashfree.checkout({

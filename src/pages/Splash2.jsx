@@ -1339,9 +1339,9 @@ useEffect(() => {
             )}
           </div>
 
-          <div id="board-section" className="w-full max-w-4xl flex flex-col items-center mb-4">
+          {/* <div id="board-section" className="w-full max-w-4xl flex flex-col items-center mb-4"> */}
             {/* Header with toggle */}
-            <div className="flex w-full items-center justify-between mb-2">
+            {/* <div className="flex w-full items-center justify-between mb-2">
               <div>
 
                 {isOn && <h2 className={`text-xl sm:text-3xl font-bold text-yellow-300`}>
@@ -1355,7 +1355,7 @@ useEffect(() => {
                   <span className="ml-1 px-2 py-1 rounded-lg">$1000</span> 
                 </button>
               }
-              </div>
+              </div> */}
               {/* <div className="flex flex-col items-center justify-center text-md font-bold">
                 <span className="text-sm mb-1"> ÅShow</span>
                 <button
@@ -1374,7 +1374,7 @@ useEffect(() => {
                   </span>
                 </button>
               </div> */}
-            </div>
+            {/* </div> */}
 
             {/* {isOn ? (
               <>
@@ -1656,10 +1656,10 @@ useEffect(() => {
                 </div>
               </> */}
             {/* ) : ( */}
-              <div
+              {/* <div
                 className={`flex flex-col w-full items-center gap-6 p-4 sm:p-6 rounded-xl border-2 ${currentTheme.card} ${currentTheme.shadow}`}
               >
-                {/* 🏆 Main Promotion */}
+
                 {promotes.length > 0 && (
                   <a
                     href={promotes[currentIndex]?.linkUrl}
@@ -1680,7 +1680,6 @@ useEffect(() => {
                   </a>
                 )}
 
-                {/* ➕ Promote Button */}
                 <button
                   onClick={() => openPopup(state, "promote")}
                   className={`flex items-center justify-center gap-2 w-full max-w-sm px-4 py-3 rounded-xl transition font-semibold text-base sm:text-lg border-2 ${currentTheme.promoteBtn}`}
@@ -1690,8 +1689,6 @@ useEffect(() => {
                     Promote it 🚀
                   </span>
                 </button>
-
-                {/* 🌀 Rotating Deck */}
                 <div className="flex gap-4 overflow-x-auto px-1 sm:px-4 py-3 w-full justify-start sm:justify-center perspective-[1000px] scrollbar-hide">
                   {Array.isArray(promotes) && promotes.length > 1 ? (
                     promotes.map((item, idx) => (
@@ -1721,9 +1718,9 @@ useEffect(() => {
                     </p>
                   )}
                 </div>
-              </div>
+              </div> */}
             {/* )} */}
-          </div>
+          {/* </div> */}
 
           {/* Adster Banner - Below Leaderboard/Featured */}
           {/* <AdsterBanner /> */}
@@ -1843,7 +1840,7 @@ useEffect(() => {
 
         <Float />
         <Floattwo />
-        <PipIframe src={"https://www.instagram.com/reel/DYrsaGER61u/?igsh=dGw4cGJoYXl4cWhm"} />
+        {/* <PipIframe src={"https://www.instagram.com/reel/DYrsaGER61u/?igsh=dGw4cGJoYXl4cWhm"} /> */}
       </div>
     </div>
   );

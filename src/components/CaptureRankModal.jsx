@@ -81,7 +81,7 @@ const CaptureRankModal = ({ isOpen, onClose, API_URL, loadCashfreeSDK, amount })
 
       // Open Cashfree checkout
       const Cashfree = await loadCashfreeSDK();
-      const cashfree = Cashfree({ mode: "production" }); // sandbox or production based on active env
+      const cashfree = Cashfree({ mode: "sandbox" }); // sandbox or production based on active env
 
       cashfree
         .checkout({

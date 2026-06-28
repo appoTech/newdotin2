@@ -532,7 +532,7 @@ class HeroSection extends Component {
       };
 
       const CashfreeInstance = await loadCashfreeSDK();
-      const cashfree = CashfreeInstance({ mode: "production" });
+      const cashfree = CashfreeInstance({ mode: "sandbox" });
 
       cashfree.checkout({
         paymentSessionId: orderData.payment_session_id,
@@ -661,7 +661,7 @@ class HeroSection extends Component {
       };
 
       const Cashfree = await loadCashfreeSDK();
-      const cashfree = Cashfree({ mode: "production" });
+      const cashfree = Cashfree({ mode: "sandbox" });
 
       cashfree
         .checkout({
@@ -1198,7 +1198,7 @@ class HeroSection extends Component {
                       <div className="input-group mt-3" style={{ marginBottom: "0px" }}>
                         <input
                           type="text"
-                          className="form-control"
+                          className="form-control w-full"
                           placeholder="paste your link here"
                           style={{ padding: "10px" }}
                           value={this.state.value}
@@ -1240,7 +1240,7 @@ class HeroSection extends Component {
                         </div>
                       </div>
 
-                      <div className="mt-3 flex flex-col sm:flex-row gap-1 w-full">
+                      <div className="mt-3 flex flex-col sm:flex-row gap-1">
                         <Button
                           className={classes.btnSignUp}
                           variant="primary"
@@ -1360,7 +1360,7 @@ class HeroSection extends Component {
         {this.state.showAttedance && (
           <AttendanceButton setShowAttendanceButton={() => this.setState({ showAttedance: false })} />
         )}
-        <PipIframe src={"https://www.instagram.com/reel/DZVIu2Zv5nq/"} />
+        {/* <PipIframe src={"https://www.instagram.com/reel/DZVIu2Zv5nq/"} /> */}
 
         <a
           href="https://cosmic-chat-scan.lovable.app/"

@@ -13,7 +13,7 @@ class Home extends Component {
     return (
       <div className="bg-black text-white min-h-screen">
         <HeroSection />
-        <Float />
+        {/* <Float /> */}
         <PageContent />
         <Footer />
       </div>
