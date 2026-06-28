@@ -342,99 +342,6 @@ const LinkModal = ({ isOpen, onClose, link, originalUrl, type, onClickAway }) =>
               </button>
             </div>
 
-            {showPromoteForm ? (
-              <div className="flex flex-col mt-2 px-1">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-base font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
-                    Promote More Links
-                  </h3>
-                  <button
-                    onClick={() => setShowPromoteForm(false)}
-                    className="text-gray-400 hover:text-white border border-white/20 rounded px-2 text-[10px] py-0.5"
-                  >
-                    Back
-                  </button>
-                </div>
-                <p className="text-[11px] text-gray-300 mb-3 leading-relaxed">
-                  Promote up to 4 other links alongside this link for only ₹99! These will be visible to everyone who visits your link.
-                </p>
-
-                <form onSubmit={handlePromoteSubmit} className="flex flex-col gap-2 max-h-[50vh] overflow-y-auto pr-1">
-                  {pLinks.map((pLink, idx) => (
-                    <div key={idx} className="flex flex-col gap-0.5">
-                      <label className="text-[9px] text-purple-300 font-semibold uppercase tracking-wider">Promoted Link {idx + 1}</label>
-                      <input
-                        type="url"
-                        placeholder={`https://example.com/link${idx + 1}`}
-                        value={pLink}
-                        onChange={(e) => {
-                          const updated = [...pLinks];
-                          updated[idx] = e.target.value;
-                          setPLinks(updated);
-                        }}
-                        className="bg-white/10 border border-white/20 rounded px-2.5 py-1 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-                      />
-                    </div>
-                  ))}
-
-                  <div className="border-t border-white/10 my-2 pt-2 flex flex-col gap-2">
-                    <h4 className="text-xs font-bold text-gray-200">Billing Information</h4>
-                    
-                    <div className="flex flex-col gap-0.5">
-                      <label className="text-[9px] text-gray-400 uppercase tracking-wider">Full Name</label>
-                      <input
-                        type="text"
-                        placeholder="John Doe"
-                        value={promoName}
-                        onChange={(e) => setPromoName(e.target.value)}
-                        className="bg-white/10 border border-white/20 rounded px-2.5 py-1 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-                        required
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-0.5">
-                      <label className="text-[9px] text-gray-400 uppercase tracking-wider">Email Address</label>
-                      <input
-                        type="email"
-                        placeholder="john@example.com"
-                        value={promoEmail}
-                        onChange={(e) => setPromoEmail(e.target.value)}
-                        className="bg-white/10 border border-white/20 rounded px-2.5 py-1 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-                        required
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-0.5">
-                      <label className="text-[9px] text-gray-400 uppercase tracking-wider">Phone Number</label>
-                      <input
-                        type="tel"
-                        placeholder="10 digit number"
-                        value={promoPhone}
-                        onChange={(e) => setPromoPhone(e.target.value)}
-                        className="bg-white/10 border border-white/20 rounded px-2.5 py-1 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-                        pattern="[0-9]{10}"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={promoLoading}
-                    className="w-full mt-2 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold py-2 rounded text-xs transition-all duration-300 transform hover:scale-[1.02] flex justify-center items-center gap-2"
-                  >
-                    {promoLoading ? (
-                      <>
-                        <span className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
-                        Processing...
-                      </>
-                    ) : (
-                      "Pay ₹99 & Promote"
-                    )}
-                  </button>
-                </form>
-              </div>
-            ) : (
               <>
                 {/* THUMBNAIL */}
                 <div className="w-full bg-gray-100 rounded-md mt-1">
@@ -530,15 +437,7 @@ const LinkModal = ({ isOpen, onClose, link, originalUrl, type, onClickAway }) =>
                       SUPER STORY
                     </button>
 
-                    {/* PROMOTE 4 LINKS OPTION (Only for SINGLE LINK) */}
-                    {currentType === "app" && (
-                      <button
-                        className="w-full mt-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-base rounded py-1.5 transition-all duration-300 transform hover:scale-[1.02]"
-                        onClick={() => setShowPromoteForm(true)}
-                      >
-                        🚀 Edit your Links (₹99)
-                      </button>
-                    )}
+
                   </div>
                 {/* ) : (
                   <>
@@ -574,7 +473,6 @@ const LinkModal = ({ isOpen, onClose, link, originalUrl, type, onClickAway }) =>
                   </>
                 )} */}
               </>
-            )}
           </div>
 
           <StoryModal

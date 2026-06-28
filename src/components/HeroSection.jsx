@@ -89,7 +89,7 @@ class HeroSection extends Component {
       paymentName: "",
       paymentEmail: "",
       paymentPhone: "",
-      type: "app",
+      type: "link",
       pendingType: "",
       countdown: 5,
       showAttedance: false,
@@ -194,8 +194,10 @@ class HeroSection extends Component {
     } else {
       this.setState({ urlexist: true, errortext_url: "" });
       if (this.state.isLogin) {
-        // user is logged in -> show type modal directly
-        this.setState({ showTypeModal: true });
+        // user is logged in -> set type to 'link' and open modal directly
+        this.setState({ type: "link" }, () => {
+          this.openModal();
+        });
       } else {
         // user is not logged in -> show captcha modal
         this.openCaptchaModal();
@@ -730,16 +732,17 @@ class HeroSection extends Component {
       if (validateCaptcha(user_captcha) === true) {
         this.setState(
           {
-            errortext: "Verified! Please choose link type...",
+            errortext: "Verified!",
             loadingicon: false,
             visible_captcha: false,
-            showTypeModal: true,
+            type: "link",
           },
           () => {
             console.log(
               "Captcha verified ✅ showing type modal",
               this.state.showTypeModal
             );
+            this.openModal();
           }
         );
         document.getElementById("user_captcha_input").value = "";
@@ -812,273 +815,273 @@ class HeroSection extends Component {
         </Modal>
       );
     }
-    let showTypeModal1 = <div></div>;
-    if (this.state.showTypeModal) {
-      showTypeModal1 = (
-        <Modal
-          visible={this.state.showTypeModal}
-          width="95%"
-          height="55%"
-          effect="fadeInDown"
-          onClickAway={() => this.closeTypeModal()}
-          style={{
-            zIndex: 99999,
-            position: "fixed",
-            maxWidth: "700px",
-            width: "95%",
-            maxHeight: "90vh",
-            overflowY: "auto",
-            borderRadius: "20px",
-            padding: "6px",
-          }}
-        >
-          <SpaceBackground />
-          <div className="flex flex-row flex-wrap items-center justify-center gap-2 py-4 relative z-10">
-            {/* Card 1: Single Link */}
-            <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("link")}>
-              <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:-rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "link" ? "ring-4 ring-blue-500" : ""}`}>
-                <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                  <img src={slogo} alt="" />
-                </div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
-                  <div className="text-4xl mb-1">🔗</div>
-                  <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">SINGLE LINK</h2>
-                  <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(for Stories)</p>
-                </div>
-                <div className="absolute top-2 left-2">
-                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
-                </div>
-                <div className="absolute bottom-2 right-2 rotate-180">
-                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
-                </div>
-              </div>
-            </div>
+    // let showTypeModal1 = <div></div>;
+    // if (this.state.showTypeModal) {
+    //   showTypeModal1 = (
+    //     <Modal
+    //       visible={this.state.showTypeModal}
+    //       width="95%"
+    //       height="55%"
+    //       effect="fadeInDown"
+    //       onClickAway={() => this.closeTypeModal()}
+    //       style={{
+    //         zIndex: 99999,
+    //         position: "fixed",
+    //         maxWidth: "700px",
+    //         width: "95%",
+    //         maxHeight: "90vh",
+    //         overflowY: "auto",
+    //         borderRadius: "20px",
+    //         padding: "6px",
+    //       }}
+    //     >
+    //       <SpaceBackground />
+    //       <div className="flex flex-row flex-wrap items-center justify-center gap-2 py-4 relative z-10">
+    //         {/* Card 1: Single Link */}
+    //         <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("link")}>
+    //           <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:-rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "link" ? "ring-4 ring-blue-500" : ""}`}>
+    //             <div className="absolute inset-0 flex items-center justify-center opacity-30">
+    //               <img src={slogo} alt="" />
+    //             </div>
+    //             <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
+    //               <div className="text-4xl mb-1">🔗</div>
+    //               <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">SINGLE LINK</h2>
+    //               <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(for Stories)</p>
+    //             </div>
+    //             <div className="absolute top-2 left-2">
+    //               <img src={appopenerLogo} alt="" className="w-6 h-6" />
+    //             </div>
+    //             <div className="absolute bottom-2 right-2 rotate-180">
+    //               <img src={appopenerLogo} alt="" className="w-6 h-6" />
+    //             </div>
+    //           </div>
+    //         </div>
 
-            {/* Card 2: Boost App Link */}
-            <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("app")}>
-              <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "app" ? "ring-4 ring-green-500" : ""}`}>
-                <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                  <img src={slogo} alt="" />
-                </div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
-                  <div className="text-4xl mb-1">📱</div>
-                  <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">Boost<br />-O-<br />Barter Box</h2>
-                  <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(for Bio)<br />($1)</p>
-                </div>
-                <div className="absolute top-2 left-2">
-                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
-                </div>
-                <div className="absolute bottom-2 right-2 rotate-180">
-                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
-                </div>
-              </div>
-            </div>
+    //         {/* Card 2: Boost App Link */}
+    //         <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("app")}>
+    //           <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "app" ? "ring-4 ring-green-500" : ""}`}>
+    //             <div className="absolute inset-0 flex items-center justify-center opacity-30">
+    //               <img src={slogo} alt="" />
+    //             </div>
+    //             <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
+    //               <div className="text-4xl mb-1">📱</div>
+    //               <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">Boost<br />-O-<br />Barter Box</h2>
+    //               <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(for Bio)<br />($1)</p>
+    //             </div>
+    //             <div className="absolute top-2 left-2">
+    //               <img src={appopenerLogo} alt="" className="w-6 h-6" />
+    //             </div>
+    //             <div className="absolute bottom-2 right-2 rotate-180">
+    //               <img src={appopenerLogo} alt="" className="w-6 h-6" />
+    //             </div>
+    //           </div>
+    //         </div>
 
-            {/* Card 3: Ad-Free Link */}
-            <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("ad-free")}>
-              <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "ad-free" ? "ring-4 ring-yellow-500" : ""}`}>
-                <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                  <img src={slogo} alt="" />
-                </div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
-                  <div className="text-4xl mb-1">⭐</div>
-                  <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">AD-FREE</h2>
-                  <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(₹11)</p>
-                </div>
-                <div className="absolute top-2 left-2">
-                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
-                </div>
-                <div className="absolute bottom-2 right-2 rotate-180">
-                  <img src={appopenerLogo} alt="" className="w-6 h-6" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal>
-      );
-    }
+    //         {/* Card 3: Ad-Free Link */}
+    //         <div className="relative flex justify-center w-auto" onClick={() => this.handleTypeSelect("ad-free")}>
+    //           <div className={`relative w-[140px] h-[200px] sm:w-[150px] sm:h-[210px] rounded-xl border-[3px] border-gray-300 shadow-[0_6px_18px_rgba(0,0,0,0.25)] overflow-hidden select-none cursor-pointer transition-all duration-300 hover:rotate-3 hover:shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${this.state.type === "ad-free" ? "ring-4 ring-yellow-500" : ""}`}>
+    //             <div className="absolute inset-0 flex items-center justify-center opacity-30">
+    //               <img src={slogo} alt="" />
+    //             </div>
+    //             <div className="absolute inset-0 flex flex-col items-center justify-center px-2 text-center text-white">
+    //               <div className="text-4xl mb-1">⭐</div>
+    //               <h2 className="text-[16px] sm:text-[18px] font-bold uppercase">AD-FREE</h2>
+    //               <p className="text-[13px] sm:text-[14px] font-semibold mt-1">(₹11)</p>
+    //             </div>
+    //             <div className="absolute top-2 left-2">
+    //               <img src={appopenerLogo} alt="" className="w-6 h-6" />
+    //             </div>
+    //             <div className="absolute bottom-2 right-2 rotate-180">
+    //               <img src={appopenerLogo} alt="" className="w-6 h-6" />
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </Modal>
+    //   );
+    // }
 
-    // 3. Billing details payment modal
-    let paymentFormModal = <div></div>;
-    if (this.state.showPaymentFormModal) {
-      paymentFormModal = (
-        <Modal
-          style={{ position: "absolute" }}
-          visible={this.state.showPaymentFormModal}
-          width="400"
-          height="auto"
-          effect="fadeInDown"
-          position="absolute"
-          onClickAway={() => this.setState({ showPaymentFormModal: false })}
-        >
-          <div className="modal-content text-white relative bg-black border-0 p-6 rounded-lg">
-            <SpaceBackground />
-            <div className="modal-header text-center relative z-10 flex justify-between items-center mb-4">
-              <h5 className="modal-title font-bold text-xl">Payment Details</h5>
-              <a className="color-white cursor-pointer ml-auto" onClick={() => this.setState({ showPaymentFormModal: false })}>
-                <FaTimesCircle size="25px" color="white" />
-              </a>
-            </div>
-            <div className="modal-body relative z-10">
-              <form onSubmit={this.initiatePayment} className="flex flex-col gap-4">
-                <input
-                  type="text"
-                  placeholder="Instagram Handle (without '@')"
-                  className="form-control px-3 py-2 rounded text-black"
-                  value={this.state.paymentName}
-                  onChange={(e) => this.setState({ paymentName: e.target.value })}
-                  required
-                />
-                <input
-                  type="email"
-                  placeholder="Email Address (optional)"
-                  className="form-control px-3 py-2 rounded text-black"
-                  value={this.state.paymentEmail}
-                  onChange={(e) => this.setState({ paymentEmail: e.target.value })}
-                />
-                <input
-                  type="tel"
-                  placeholder="Phone Number (10 digits)"
-                  className="form-control px-3 py-2 rounded text-black"
-                  value={this.state.paymentPhone}
-                  onChange={(e) => this.setState({ paymentPhone: cleanPhone(e.target.value) })}
-                  pattern="[0-9]{10}"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="btn btn-primary font-bold mt-4 py-2 flex justify-center items-center"
-                  disabled={this.state.loadingicon}
-                >
-                  Pay {this.state.pendingType === "app" ? "$1" : "₹11"}
-                  {this.state.loadingicon ? <FaCircleNotch className={`${classes.spinner} ml-2`} /> : null}
-                </button>
-              </form>
-            </div>
-          </div>
-        </Modal>
-      );
-    }
+    // // 3. Billing details payment modal
+    // let paymentFormModal = <div></div>;
+    // if (this.state.showPaymentFormModal) {
+    //   paymentFormModal = (
+    //     <Modal
+    //       style={{ position: "absolute" }}
+    //       visible={this.state.showPaymentFormModal}
+    //       width="400"
+    //       height="auto"
+    //       effect="fadeInDown"
+    //       position="absolute"
+    //       onClickAway={() => this.setState({ showPaymentFormModal: false })}
+    //     >
+    //       <div className="modal-content text-white relative bg-black border-0 p-6 rounded-lg">
+    //         <SpaceBackground />
+    //         <div className="modal-header text-center relative z-10 flex justify-between items-center mb-4">
+    //           <h5 className="modal-title font-bold text-xl">Payment Details</h5>
+    //           <a className="color-white cursor-pointer ml-auto" onClick={() => this.setState({ showPaymentFormModal: false })}>
+    //             <FaTimesCircle size="25px" color="white" />
+    //           </a>
+    //         </div>
+    //         <div className="modal-body relative z-10">
+    //           <form onSubmit={this.initiatePayment} className="flex flex-col gap-4">
+    //             <input
+    //               type="text"
+    //               placeholder="Instagram Handle (without '@')"
+    //               className="form-control px-3 py-2 rounded text-black"
+    //               value={this.state.paymentName}
+    //               onChange={(e) => this.setState({ paymentName: e.target.value })}
+    //               required
+    //             />
+    //             <input
+    //               type="email"
+    //               placeholder="Email Address (optional)"
+    //               className="form-control px-3 py-2 rounded text-black"
+    //               value={this.state.paymentEmail}
+    //               onChange={(e) => this.setState({ paymentEmail: e.target.value })}
+    //             />
+    //             <input
+    //               type="tel"
+    //               placeholder="Phone Number (10 digits)"
+    //               className="form-control px-3 py-2 rounded text-black"
+    //               value={this.state.paymentPhone}
+    //               onChange={(e) => this.setState({ paymentPhone: cleanPhone(e.target.value) })}
+    //               pattern="[0-9]{10}"
+    //               required
+    //             />
+    //             <button
+    //               type="submit"
+    //               className="btn btn-primary font-bold mt-4 py-2 flex justify-center items-center"
+    //               disabled={this.state.loadingicon}
+    //             >
+    //               Pay {this.state.pendingType === "app" ? "$1" : "₹11"}
+    //               {this.state.loadingicon ? <FaCircleNotch className={`${classes.spinner} ml-2`} /> : null}
+    //             </button>
+    //           </form>
+    //         </div>
+    //       </div>
+    //     </Modal>
+    //   );
+    // }
 
-    // 4. Hero promote package modal (4 links)
-    let heroPromoteModal = <div></div>;
-    if (this.state.showHeroPromoteModal) {
-      heroPromoteModal = (
-        <Modal
-          visible={this.state.showHeroPromoteModal}
-          width="95%"
-          height="auto"
-          effect="fadeInDown"
-          onClickAway={() => this.setState({ showHeroPromoteModal: false })}
-          style={{
-            zIndex: 99999,
-            position: "fixed",
-            maxWidth: "450px",
-            width: "95%",
-            maxHeight: "90vh",
-            overflowY: "auto",
-            borderRadius: "20px",
-            padding: "6px",
-          }}
-        >
-          <div className="modal-content text-white relative bg-[#0d0d1c] border-2 border-white/20 p-6 rounded-2xl max-h-[85vh] overflow-y-auto">
-            <SpaceBackground />
+    // // 4. Hero promote package modal (4 links)
+    // let heroPromoteModal = <div></div>;
+    // if (this.state.showHeroPromoteModal) {
+    //   heroPromoteModal = (
+    //     <Modal
+    //       visible={this.state.showHeroPromoteModal}
+    //       width="95%"
+    //       height="auto"
+    //       effect="fadeInDown"
+    //       onClickAway={() => this.setState({ showHeroPromoteModal: false })}
+    //       style={{
+    //         zIndex: 99999,
+    //         position: "fixed",
+    //         maxWidth: "450px",
+    //         width: "95%",
+    //         maxHeight: "90vh",
+    //         overflowY: "auto",
+    //         borderRadius: "20px",
+    //         padding: "6px",
+    //       }}
+    //     >
+    //       <div className="modal-content text-white relative bg-[#0d0d1c] border-2 border-white/20 p-6 rounded-2xl max-h-[85vh] overflow-y-auto">
+    //         <SpaceBackground />
 
-            <div className="relative z-10">
-              <div className="flex justify-between items-center pb-3 border-b border-white/10 mb-4">
-                <h3 className="text-xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
-                  Promote More Links
-                </h3>
-                <button
-                  onClick={() => this.setState({ showHeroPromoteModal: false })}
-                  className="text-gray-400 hover:text-white border border-white/20 rounded px-2.5 py-0.5 text-xs"
-                >
-                  Close
-                </button>
-              </div>
+    //         <div className="relative z-10">
+    //           <div className="flex justify-between items-center pb-3 border-b border-white/10 mb-4">
+    //             <h3 className="text-xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-transparent bg-clip-text">
+    //               Promote More Links
+    //             </h3>
+    //             <button
+    //               onClick={() => this.setState({ showHeroPromoteModal: false })}
+    //               className="text-gray-400 hover:text-white border border-white/20 rounded px-2.5 py-0.5 text-xs"
+    //             >
+    //               Close
+    //             </button>
+    //           </div>
 
-              <p className="text-xs text-gray-300 mb-4 leading-relaxed">
-                Promote up to 4 other links alongside your main link for only ₹50! These will be visible to everyone who visits your smart link.
-              </p>
+    //           <p className="text-xs text-gray-300 mb-4 leading-relaxed">
+    //             Promote up to 4 other links alongside your main link for only ₹50! These will be visible to everyone who visits your smart link.
+    //           </p>
 
-              <form onSubmit={this.handleHeroPromoteSubmit} className="flex flex-col gap-3">
-                {this.state.heroPLinks.map((pLink, idx) => (
-                  <div key={idx} className="flex flex-col gap-1">
-                    <label className="text-[10px] text-purple-300 font-semibold uppercase tracking-wider">
-                      Promoted Link {idx + 1}
-                    </label>
-                    <input
-                      type="url"
-                      placeholder={`https://example.com/link${idx + 1}`}
-                      value={pLink}
-                      onChange={(e) => {
-                        const updated = [...this.state.heroPLinks];
-                        updated[idx] = e.target.value;
-                        this.setState({ heroPLinks: updated });
-                      }}
-                      className="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-                    />
-                  </div>
-                ))}
+    //           <form onSubmit={this.handleHeroPromoteSubmit} className="flex flex-col gap-3">
+    //             {this.state.heroPLinks.map((pLink, idx) => (
+    //               <div key={idx} className="flex flex-col gap-1">
+    //                 <label className="text-[10px] text-purple-300 font-semibold uppercase tracking-wider">
+    //                   Promoted Link {idx + 1}
+    //                 </label>
+    //                 <input
+    //                   type="url"
+    //                   placeholder={`https://example.com/link${idx + 1}`}
+    //                   value={pLink}
+    //                   onChange={(e) => {
+    //                     const updated = [...this.state.heroPLinks];
+    //                     updated[idx] = e.target.value;
+    //                     this.setState({ heroPLinks: updated });
+    //                   }}
+    //                   className="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+    //                 />
+    //               </div>
+    //             ))}
 
-                <div className="border-t border-white/10 my-3 pt-3 flex flex-col gap-3">
-                  <h4 className="text-sm font-bold text-gray-200">Billing Information</h4>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[10px] text-gray-400 uppercase tracking-wider">Full Name</label>
-                    <input
-                      type="text"
-                      placeholder="John Doe"
-                      value={this.state.heroPromoName}
-                      onChange={(e) => this.setState({ heroPromoName: e.target.value })}
-                      className="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-                      required
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[10px] text-gray-400 uppercase tracking-wider">Email Address</label>
-                    <input
-                      type="email"
-                      placeholder="john@example.com"
-                      value={this.state.heroPromoEmail}
-                      onChange={(e) => this.setState({ heroPromoEmail: e.target.value })}
-                      className="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-                      required
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-[10px] text-gray-400 uppercase tracking-wider">Phone Number</label>
-                    <input
-                      type="tel"
-                      placeholder="10 digit number"
-                      value={this.state.heroPromoPhone}
-                      onChange={(e) => this.setState({ heroPromoPhone: e.target.value })}
-                      className="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
-                      pattern="[0-9]{10}"
-                      required
-                    />
-                  </div>
-                </div>
+    //             <div className="border-t border-white/10 my-3 pt-3 flex flex-col gap-3">
+    //               <h4 className="text-sm font-bold text-gray-200">Billing Information</h4>
+    //               <div className="flex flex-col gap-1">
+    //                 <label className="text-[10px] text-gray-400 uppercase tracking-wider">Full Name</label>
+    //                 <input
+    //                   type="text"
+    //                   placeholder="John Doe"
+    //                   value={this.state.heroPromoName}
+    //                   onChange={(e) => this.setState({ heroPromoName: e.target.value })}
+    //                   className="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+    //                   required
+    //                 />
+    //               </div>
+    //               <div className="flex flex-col gap-1">
+    //                 <label className="text-[10px] text-gray-400 uppercase tracking-wider">Email Address</label>
+    //                 <input
+    //                   type="email"
+    //                   placeholder="john@example.com"
+    //                   value={this.state.heroPromoEmail}
+    //                   onChange={(e) => this.setState({ heroPromoEmail: e.target.value })}
+    //                   className="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+    //                   required
+    //                 />
+    //               </div>
+    //               <div className="flex flex-col gap-1">
+    //                 <label className="text-[10px] text-gray-400 uppercase tracking-wider">Phone Number</label>
+    //                 <input
+    //                   type="tel"
+    //                   placeholder="10 digit number"
+    //                   value={this.state.heroPromoPhone}
+    //                   onChange={(e) => this.setState({ heroPromoPhone: e.target.value })}
+    //                   className="bg-white/10 border border-white/20 rounded-xl px-3 py-1.5 text-white text-xs outline-none focus:border-purple-500 focus:bg-white/15 transition-all"
+    //                   pattern="[0-9]{10}"
+    //                   required
+    //                 />
+    //               </div>
+    //             </div>
 
-                <button
-                  type="submit"
-                  disabled={this.state.heroPromoLoading}
-                  className="w-full mt-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold py-2.5 rounded-xl text-xs transition-all duration-300 transform hover:scale-[1.02] flex justify-center items-center gap-2"
-                >
-                  {this.state.heroPromoLoading ? (
-                    <>
-                      <span className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
-                      Processing...
-                    </>
-                  ) : (
-                    "Pay ₹50 & Promote"
-                  )}
-                </button>
-              </form>
-            </div>
-          </div>
-        </Modal>
-      );
-    }
+    //             <button
+    //               type="submit"
+    //               disabled={this.state.heroPromoLoading}
+    //               className="w-full mt-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold py-2.5 rounded-xl text-xs transition-all duration-300 transform hover:scale-[1.02] flex justify-center items-center gap-2"
+    //             >
+    //               {this.state.heroPromoLoading ? (
+    //                 <>
+    //                   <span className="animate-spin rounded-full h-3 w-3 border-2 border-white border-t-transparent" />
+    //                   Processing...
+    //                 </>
+    //               ) : (
+    //                 "Pay ₹50 & Promote"
+    //               )}
+    //             </button>
+    //           </form>
+    //         </div>
+    //       </div>
+    //     </Modal>
+    //   );
+    // }
 
     // 5. LinkModal output when visible is true
     let modal_generatelink = <div></div>;
@@ -1246,14 +1249,14 @@ class HeroSection extends Component {
                         >
                           Smarten Link
                         </Button>
-                        <Button
+                        {/* <Button
                           className="rounded-lg font-bold flex items-center justify-center"
                           type="button"
                           onClick={this.handleOpenHeroPromoteModal}
                           style={{ height: "55px", flex: 1 }}
                         >
                           Promote 4 Links (₹50)
-                        </Button>
+                        </Button> */}
                       </div>
                     </Form>
 
@@ -1379,10 +1382,10 @@ class HeroSection extends Component {
 
         {/* Modals from newdotin2 */}
         {modal_captcha}
-        {showTypeModal1}
+        {/* {showTypeModal1} */}
         {modal_generatelink}
-        {paymentFormModal}
-        {heroPromoteModal}
+        {/* {paymentFormModal} */}
+        {/* {heroPromoteModal} */}
       </>
     );
   }

@@ -139,14 +139,14 @@
   background-image: linear-gradient(to right, #f0ebb4, #f58c28, #a02d0f) !important;
   background-image: radial-gradient(
     circle at 50% var(--gy, 50%),
-    #f0ebb4 0%,
-    #f58c28 50%,
+    #ffaa5a 0%,
+    #fc8d25 50%,
     #a02d0f 90%,
     rgba(160, 45, 15, 0) 150%
   ) !important;
   background-image: radial-gradient(
     circle at 50% var(--gy, 50%),
-    oklch(0.94 0.16 110) 0%,
+    oklch(72.949% 0.08823 67.386) 0%,
     oklch(0.78 0.24 60) 50%,
     oklch(0.45 0.22 25) 90%,
     rgba(160, 45, 15, 0) 150%
