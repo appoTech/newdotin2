@@ -742,7 +742,7 @@ useEffect(() => {
             : [];
           console.log("New Promotes from API: ", newPromotes);
           console.log(res?.data?.weeklyPromotes.data.data);
-          setpromotes((prev) => [...prev, ...newPromotes]);
+          setpromotes((prev) => [...newPromotes, ...prev]);
         }
 
         app_intend = res.data.smartUrl.data.app_intend;
